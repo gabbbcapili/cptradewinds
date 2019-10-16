@@ -1,0 +1,14 @@
+[20-Sep-2019 06:06:15 UTC] PHP Warning:  Unsupported declare 'strict_types' in /home/yuuki/public_html/cptradewinds/vendor/zendframework/zend-diactoros/src/functions/create_uploaded_file.php on line 8
+[20-Sep-2019 06:06:15 UTC] PHP Parse error:  syntax error, unexpected ':', expecting '{' in /home/yuuki/public_html/cptradewinds/vendor/zendframework/zend-diactoros/src/functions/create_uploaded_file.php on line 19
+[20-Sep-2019 06:07:41 UTC] PHP Warning:  Unsupported declare 'strict_types' in /home/yuuki/public_html/cptradewinds/vendor/zendframework/zend-diactoros/src/functions/create_uploaded_file.php on line 8
+[20-Sep-2019 06:07:41 UTC] PHP Parse error:  syntax error, unexpected ':', expecting '{' in /home/yuuki/public_html/cptradewinds/vendor/zendframework/zend-diactoros/src/functions/create_uploaded_file.php on line 19
+[20-Sep-2019 06:08:22 UTC] PHP Warning:  Unsupported declare 'strict_types' in /home/yuuki/public_html/cptradewinds/vendor/zendframework/zend-diactoros/src/functions/create_uploaded_file.php on line 8
+[20-Sep-2019 06:08:22 UTC] PHP Parse error:  syntax error, unexpected ':', expecting '{' in /home/yuuki/public_html/cptradewinds/vendor/zendframework/zend-diactoros/src/functions/create_uploaded_file.php on line 19
+[20-Sep-2019 06:08:26 UTC] PHP Warning:  Unsupported declare 'strict_types' in /home/yuuki/public_html/cptradewinds/vendor/zendframework/zend-diactoros/src/functions/create_uploaded_file.php on line 8
+[20-Sep-2019 06:08:26 UTC] PHP Parse error:  syntax error, unexpected ':', expecting '{' in /home/yuuki/public_html/cptradewinds/vendor/zendframework/zend-diactoros/src/functions/create_uploaded_file.php on line 19
+[20-Sep-2019 06:40:58 UTC] PHP Warning:  Unsupported declare 'strict_types' in /home/yuuki/public_html/cptradewinds/vendor/zendframework/zend-diactoros/src/functions/create_uploaded_file.php on line 8
+[20-Sep-2019 06:40:58 UTC] PHP Parse error:  syntax error, unexpected ':', expecting '{' in /home/yuuki/public_html/cptradewinds/vendor/zendframework/zend-diactoros/src/functions/create_uploaded_file.php on line 19
+[20-Sep-2019 06:41:06 UTC] PHP Warning:  Unsupported declare 'strict_types' in /home/yuuki/public_html/cptradewinds/vendor/zendframework/zend-diactoros/src/functions/create_uploaded_file.php on line 8
+[20-Sep-2019 06:41:06 UTC] PHP Parse error:  syntax error, unexpected ':', expecting '{' in /home/yuuki/public_html/cptradewinds/vendor/zendframework/zend-diactoros/src/functions/create_uploaded_file.php on line 19
+[20-Sep-2019 06:41:56 UTC] PHP Warning:  Unsupported declare 'strict_types' in /home/yuuki/public_html/cptradewinds/vendor/zendframework/zend-diactoros/src/functions/create_uploaded_file.php on line 8
+[20-Sep-2019 06:41:56 UTC] PHP Parse error:  syntax error, unexpected ':', expecting '{' in /home/yuuki/public_html/cptradewinds/vendor/zendframework/zend-diactoros/src/functions/create_uploaded_file.php on line 19

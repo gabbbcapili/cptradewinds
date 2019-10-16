@@ -1,0 +1,135 @@
+
+    * {
+        margin: 0;
+    }
+
+    body{
+      background:linear-gradient(0deg,rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url("/images/system/login-bground.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      height: 100vh;
+    }
+    
+    #app{
+       min-height:100%;
+       position:relative;
+    }
+
+    #overlay{
+    padding-bottom:80px;
+    padding-top: 50px;
+    }
+
+    .get-quote-btn{
+    margin-top: 5px !important;
+    margin-bottom: 12px !important;
+    margin-right: 8px !important;
+    padding: 15px 30px !important;
+    background-color: #1498d5;
+    transition: background-color .25s,border-color .25s;
+    color: white !important;
+    }
+    .get-quote-btn:hover{
+    background: black !important;
+    color: white !important;
+    border-bottom: 0px !important;
+    }
+    .import-footer{
+    padding: 10px 50px;
+    background: rgba(53, 53, 53, 1);
+    color:white !important;
+    border-top: 0px solid #d2d6de;
+     position:absolute;
+    bottom: 0;
+    width: 100%;
+    height: 65px;
+    }
+
+
+    .navbar-brand {
+    padding: 0px;
+    }
+    .navbar-brand>img {
+    height: 100%;
+    width: auto;
+    /*  height:80px; padding: 5px; margin-left: 60px;  */
+    }
+    .example2 .navbar-brand>img {
+    height: 70px;
+    position: relative;
+    bottom: 4px;
+    padding-left: 15px;
+    padding-right: 15px;
+    }
+    .get-quote{
+      display: none;
+    }
+    @media only screen and (max-width: 765px) {
+    .example2 .navbar-brand>img {
+    height: 70px;
+    position: relative;
+    bottom: 0px;
+    margin-left: 0px;
+    }
+    #navbarSupportedContent .nav>li>a:hover {
+    color: black;
+    background: white;
+    border-bottom: 0px solid #ffc400 !important;
+    }
+    .import-footer{
+     position: relative;
+    }
+    .get-quote{
+        display: block;
+    }    
+    .get-quote-btn{
+        display: none;
+    }
+    #empty-space{
+        display: none;
+    }
+    }
+
+    #navbarSupportedContent .nav>li>a {
+    color: black;
+    font-weight: 400 !important;
+    font-family: Roboto;
+    font-size: 14px;
+    margin: 12px 0px 0px 0px;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-bottom: 8px;
+    padding-top: 5px;
+    transition: border 0.1s ease-in-out;
+    }
+    .nav-item{
+    padding-right: 10px;
+    padding-left: 10px;      
+    }
+    #navbarSupportedContent .nav>li>a:hover {
+    color: #1498d5;
+    background: white;
+    border-bottom: 2px solid #1498d5;
+    }
+    
+
+    .card-header{
+        background:#1498d5;
+        color: white;
+    }
+    .card{
+        border:0px;
+    }
+
+    .login-card{
+        margin-top: 50px;
+    }
+
+    .btn-primary{
+       background: #1498d5; 
+       border:1px solid #1498d5;
+    }
+    .btn-primary:hover{
+       background: black; 
+       border:1px solid black;
+    }

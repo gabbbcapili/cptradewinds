@@ -1,0 +1,55 @@
+.input-table-text{
+	width: 150px
+	align: center;
+}
+.input-table-tr{
+	color:white;
+	background-color:#5cb85c;
+}
+.input-table-count{
+	width:15px
+}
+.input-table-qty{
+	width:75px;
+}
+.input-table-number{
+	width:200px;
+}
+.input-table-select{
+	width:300px;
+}
+
+.print {
+	display : none;
+}
+
+@media print
+{    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+    .print, .print *{
+		display: block;
+	}
+	.pagebreak {
+        clear: both;
+        page-break-after: always;
+    }
+}
+
+.input-text-center{
+	text-align: center;
+}
+
+.center-div{
+	width: 50%; margin: 0px auto;
+}
+
+.green{
+	color:green;
+}
+
+.red{
+	color:red;
+}
