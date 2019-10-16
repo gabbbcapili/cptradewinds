@@ -18,6 +18,7 @@ class CreatePaymentTable extends Migration
             //initial customer
             $table->string('supplier_name');
             $table->string('supplier_email');
+            $table->unsignedInteger('source_id')->nullable();
             //supplier info   
             $table->string('supplier_address')->nullable();
             $table->string('bank_name')->nullable();

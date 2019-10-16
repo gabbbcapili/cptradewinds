@@ -22,6 +22,7 @@ use App\OrderDetails;
 use App\OrderKey;
 use App\User;
 use App\OrderLogs;
+use App\Source;
 //utils
 use App\Utils\ValidatorUtil;
 use Illuminate\Mail\Mailer;
@@ -145,7 +146,14 @@ class OrderController extends Controller
         $order_type = $request->input('order_type');
         $token = OrderKey::get_available_key();
         $url = action('OrderController@ConsumeToken', [$token]);
-        $header = ($request->only(['supplier','email', 'location' , 'import_details', 'warehouse', 'pickup_location', 'invoice_no']));
+        $header = ($request->only(['supplier','email', 'location' , 'import_details', 'warehouse', 'pickup_location', 'invoice_no', 'source']));
+        if($header['source']){
+            $source = Source::where('name', $header['source'])->first();
+            if(! $source){
+                $source = Source::create(['name' => $header['source']]);
+            }
+            $header['source_id'] = $source->id;
+        }
         if($order_type == 'quotation'){
             $header['withQuote'] = true;
             $header['status'] = 4;

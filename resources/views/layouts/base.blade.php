@@ -173,6 +173,8 @@
 <script src="{{ asset('plugins/swal/swal.js') }}"></script>
 <!-- popper -->
 <script src="{{ asset('plugins/popper/popper.min.js') }}"></script>
+ <!-- Custom js -->
+<script src="{{ asset('app/app.js')}} "></script>
 <!-- Datatable -->
 <script type="text/javascript">
   $( document ).ready(function() {

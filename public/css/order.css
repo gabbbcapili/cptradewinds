@@ -1,0 +1,22 @@
+     .content-wrapper {
+/*  min-height:100%;
+  background:url({{ asset('images/system/bground.jpg') }}) rgba(0,0,0,0.4);
+  background-size:cover;
+  background-blend-mode: multiply;   */  	
+     }
+	.import-title{
+		background: #1498d5;
+		color: white;
+		padding:10px 15px;
+		font-family: roboto;
+		font-size: 25px;
+		margin-top: 20px;
+	}
+	.input-table-tr {
+    color: white;
+    background-color: #1498d5 !important;
+	}
+	.btn-primary {
+		margin-bottom: 10px;
+	}
+}

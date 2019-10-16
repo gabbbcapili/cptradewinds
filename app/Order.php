@@ -7,13 +7,14 @@ use App\User;
 use App\OrderDetails;
 use App\OrderKey;
 use GuzzleHttp\Client;
+use App\Source;
 
 class Order extends Model
 {
     //
      protected $table = 'orderhh';
 
-     protected $fillable = ['supplier', 'email', 'user_id', 'supplier_id', 'status', 'import_details', 'location', 'cbm', 'weight', 'price', 'price_date' , 'warehouse', 'payment', 'payment_date' , 'quoteFor', 'boxes', 'pickup_location', 'withQuote', 'shipment_id', 'invoice_no', 'shipment_proof','boxes_received'];
+     protected $fillable = ['supplier', 'email', 'user_id', 'supplier_id', 'status', 'import_details', 'location', 'cbm', 'weight', 'price', 'price_date' , 'warehouse', 'payment', 'payment_date' , 'quoteFor', 'boxes', 'pickup_location', 'withQuote', 'shipment_id', 'invoice_no', 'shipment_proof','boxes_received', 'source_id'];
      
      public function details(){
      	return $this->hasMany(OrderDetails::class, 'order_id', 'id')->whereNull('type');
@@ -33,6 +34,10 @@ class Order extends Model
 
      public function supplier_by(){
           return $this->belongsTo(User::class, 'supplier_id');
+     }
+
+     public function source(){
+        return $this->belongsTo(Source::class, 'source_id', 'id');
      }
 
      public function total_boxes(){

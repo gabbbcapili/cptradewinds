@@ -95,6 +95,8 @@
                   </span></a>
           <div class="dropdown-menu">
             <a href="#" class="dropdown-item modal_button" data-href="{{ action('SettingController@index') }}"><i class="fa fa-dollar"></i> Dollar Rate</a>
+
+            <a href="{{ action('SourceController@index') }}" class="dropdown-item"><i class="fa fa-crosshairs"></i> Sources</a>
           </div>
         </li>
         @endif

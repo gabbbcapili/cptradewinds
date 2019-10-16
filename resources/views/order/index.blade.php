@@ -1,3 +1,4 @@
+@inject('request', 'Illuminate\Http\Request')
 @extends('layouts.base')
 @section('title', $title)
 
@@ -17,7 +18,7 @@
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">{{ $title }} List</h3>
+            <h3 class="box-title">{{ $title }} List</h3>
             </div>
             <!-- /.box-header -->
 
@@ -28,6 +29,9 @@
                 <tr>
                   <th class="text-center">Shipment ID</th>
                   <th class="text-center">Date</th>
+                  @if($request->user()->isAdmin())
+                    <th class="text-center">Source</th>
+                  @endif
                   <!-- <th class="text-center">Logs</th> -->
                   @if(request()->segment(1) == 'quotation')
                   <th class="text-center">Price</th>
@@ -40,7 +44,10 @@
                   @foreach($orders as $order)
                 <tr>
                   <td>{{ $order->shipment_id }}</td>
-                  <td> {{ date('d-m-Y', strtotime($order->created_at )) }}</td>
+                  <td> {{ date('d-m-Y', strtotime($order->created_at )) }}</td> 
+                  @if($request->user()->isAdmin())
+                    <td>{{ $order->source ? $order->source->name : ''}}</td>
+                  @endif
                   @if(request()->segment(1) == 'quotation')
                     <td>{{ $order->price }}</td>
                   @endif
@@ -217,7 +224,7 @@ $(document).ready( function(){
     $('#order_list').DataTable({
         aaSorting: [[0, 'desc']],
         columnDefs: [ {
-        "targets": [2,3],
+        "targets": [3,4],
         "orderable": false,
         "searchable": false
     }],
@@ -266,66 +273,4 @@ $(document).ready( function(){
 
 });  
 </script>
-
-
-<script type="text/javascript">
-  
-</script>
-
-
-
-<!-- 
-<script type="text/javascript">
-function submit_photos(){
-  // photos and invoice
-  $('.btn_save').prop('disabled', true);
-      window.swal({
-          title: "Checking...",
-          text: "Please wait",
-      //    imageUrl: "images/ajaxloader.gif",
-          button: false,
-          allowOutsideClick: false
-        });
-    console.log($('#photos_form').serialize());
-      $.ajax({
-        url : $('#photos_form').attr('action'),
-        type : 'POST',
-        data : $('#photos_form').serialize(),
-        success: function(data){
-          if (data.success){
-            console.log(data.success);
-            window.location.replace("/orders");
-          }
-              if (data.error){
-                console.log(data.error);
-                $('.error').remove();
-                $.each(data.error, function(index, val){
-                $('input[id="'+ index +'"]').after('<label class="text-danger error">' + val + '</label>');
-                });
-              }
-              setTimeout(() => {
-              window.swal({
-                title: "Something's not right..",
-                button: false,
-                timer: 1000
-              });
-            }, 500);
-               $('.btn_save').prop('disabled', false);
-              // success logic
-           },
-          error: function(jqXhr, json, errorThrown){
-            console.log(jqXhr);
-            console.log(json);
-            console.log(errorThrown);
-            $('.btn_save').prop('disabled', false);
-          }
-      });
-}
-
-</script> -->
-
-
-
-
-
 @endsection

@@ -15,6 +15,8 @@ class CreateInsuranceTable extends Migration
     {
         Schema::create('insurance', function (Blueprint $table) {
             $table->increments('id');
+
+            $table->unsignedInteger('source_id')->nullable();
             
             $table->unsignedInteger('order_id');
             $table->foreign('order_id')->references('id')->on('orderhh')->onDelete('cascade');

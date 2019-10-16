@@ -34,6 +34,9 @@ Route::resource('payments', 'PaymentController')->middleware('auth');
 Route::resource('orders', 'OrderController');
 Route::resource('insurance', 'InsuranceController')->middleware('auth');
 Route::resource('clearance', 'ClearanceController')->middleware('auth');
+
+Route::resource('source', 'SourceController')->middleware('admin');
+
  
 Route::get('orders/cancel/{order}', 'OrderController@cancel');
 
@@ -147,6 +150,9 @@ Route::put('clearance/addTrackingNoStore/{clearance}', 'ClearanceController@addT
 
 
 Route::get('profile', 'HomeController@profile')->middleware('auth')->name('profile');
+
+//deletes
+Route::get('source/delete/{source}', 'SourceController@delete')->middleware('admin');
 
 Route::get('test', function(){
 	$payment = \App\Payment::first();

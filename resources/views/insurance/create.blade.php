@@ -20,7 +20,7 @@
 						<label for="bank_name">Choose Transaction:*</label>
 						<select class="form-control select2" id="order_id" name="order_id">
 							@foreach($orders as $order)
-							<option value="{{ $order->id }}"> Transaction: #{{ $order->id }}, &nbsp {{ $order->supplier_by->name }} </option>
+							<option value="{{ $order->id }}"> Transaction: #{{ $order->id }}, &nbsp {{ $order->supplier_by ? $order->supplier_by->name : '' }} </option>
 							@endforeach
 						</select>
 					</div>
