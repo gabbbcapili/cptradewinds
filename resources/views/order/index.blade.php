@@ -49,7 +49,7 @@
                     <td>{{ $order->source ? $order->source->name : ''}}</td>
                   @endif
                   @if(request()->segment(1) == 'quotation')
-                    <td>{{ $order->price }}</td>
+                    <td>{{ number_format($order->price, 2) }}</td>
                   @endif
 
               <!--     <td class="text-center"><a href="#" class="view_order btn" data-href="{{ action('OrderController@show', [$order->id] ) }}"><i class="fa fa-file-text"></i> View Logs</a></td> -->

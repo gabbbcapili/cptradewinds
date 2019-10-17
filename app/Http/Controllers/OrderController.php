@@ -81,11 +81,6 @@ class OrderController extends Controller
      */
     public function create(Request $request, Mailer $mailer)
     {
-        // $mailer->to(env('ADMIN1'))->send(new AdminRemindMail(route('addQuotationNoLogin', ['token' =>])));
-
-
-
-
         if($request->input('clientid') != null){
                if( $request->user()){
                 if($request->user()->isSupplier()){
@@ -486,7 +481,7 @@ class OrderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(Order $order)
-    {
+    {  
         if( $order->user_id != request()->user()->id && $order->supplier_id != request()->user()->id ){
              abort(401);
         }
@@ -553,7 +548,7 @@ class OrderController extends Controller
 
         $order->update(['status' => $status, 'price' => null]);
         if($order->withQuote == true){
-            $mailer->to(env('ADMIN1'))->send(new AdminRemindMail(action('OrderController@addQuotation', $order->id)));
+            $mailer->to(env('ADMIN1'))->send(new AdminRemindMail(route('addQuotationNoLogin', ['token' => $order->token])));
         }
         return response()->json(['success' => 'Success']);
         }
@@ -607,7 +602,7 @@ class OrderController extends Controller
         $status = 4;
         $order->update(['status' => $status, 'price' => null]);
         if($order->withQuote == true){
-            $mailer->to(env('ADMIN1'))->send(new AdminRemindMail(route('addQuotationNoLogin'), Hash::make($order->id)));
+            $mailer->to(env('ADMIN1'))->send(new AdminRemindMail(route('addQuotationNoLogin', ['token' => $order->token])));
         }
         return response()->json(['success' => 'Success', 'redirect' => action('OrderController@show', [$order->id])]);
         }
@@ -710,7 +705,7 @@ class OrderController extends Controller
        $order->update(['status' => 4]);
        $url = action('OrderController@addQuotation', $order->id);
 
-       $mailer->to(env('ADMIN1'))->send(new AdminRemindMail($url));
+       $mailer->to(env('ADMIN1'))->send(new AdminRemindMail(route('addQuotationNoLogin', ['token' => $order->token])));
 
        OrderLogs::create(['order_id' => $order->id, 'description' => $request->user()->name . ' requested admin for quotation.']);
         request()->session()->flash('status', 'Success! Please wait for the admin.');
