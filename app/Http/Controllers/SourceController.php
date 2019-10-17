@@ -29,7 +29,7 @@ class SourceController extends Controller
                         })
             ->addColumn('quotations', function(Source $source) {
                            $route =  route('quotationcreate') .'?source='. $source->name;
-                           return '<button class="btn btn-warning copy" data-copy="'. $route .'"> '. $source->shipments->count()  .' </button>';
+                           return '<button class="btn btn-warning copy" data-copy="'. $route .'"> '. $source->quotations->count()  .' </button>';
                         })
             ->addColumn('shipments', function(Source $source) {
                             $route =  route('shipmentcreate') .'?source='. $source->name;
