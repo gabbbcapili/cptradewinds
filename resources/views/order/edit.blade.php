@@ -50,6 +50,22 @@
 </script>
 
 <script type="text/javascript">
+	
+	function addBox(){
+		var row = parseInt($('#rowcount').val()) + 1;
+		$('#rowcount').val(row);
+		var html = '<tr><td><span class="sr_number">'+row+'</span></td>';
+		html += '<td><input type="text" class="form-control input-sm" value="1" name="product['+row+'][qty]" id="product.'+row+'.qty" style="text-align: center;"></td>';
+		html += '<td><select class="form-control input-table-select" id="product.'+row+'.measurement" name="product['+row+'][measurement]"><option value="cm">Centimeters</option><option value="m">Meters</option><option value="in">Inches</option><option value="ft">Feet</option></select></td>';
+		html += '<td><input type="text" class="form-control input-sm" name="product['+row+'][length]" id="product.'+row+'.length"></td>';
+		html += '<td><input type="text" class="form-control input-sm" name="product['+row+'][width]" id="product.'+row+'.width"></td>';
+		html += '<td><input type="text" class="form-control input-sm" name="product['+row+'][height]" id="product.'+row+'.height"></td>';
+		html += '<td><input type="text" class="form-control input-sm" name="product['+row+'][weight]" id="product.'+row+'.weight"></td>';
+		html += '<td><i class="fa fa-times remove_order_entry_row text-danger" title="Remove" style="cursor:pointer;"></i></td></tr>';
+		$('#box-table tr:last').after(html);
+		update_table_sr_number();
+	}
+
 	function addRow(){
 		var row = parseInt($('#rowcount').val()) + 1;
 		$('#rowcount').val(row);

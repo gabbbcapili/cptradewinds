@@ -38,6 +38,16 @@ class ValidatorUtil{
         ];
     }
 
+    public function validateBoxes(){
+        return [
+            'product.*.qty' => 'required|integer|min:1',
+            'product.*.length' => 'required|regex:/^\d*(\.\d{1,2})?$/',
+            'product.*.width' => 'required|regex:/^\d*(\.\d{1,2})?$/',
+            'product.*.height' => 'required|regex:/^\d*(\.\d{1,2})?$/',
+            'product.*.weight' => 'required|regex:/^\d*(\.\d{1,2})?$/',
+        ];
+    }
+
     public function guessOrderValidation(){
         return [
             // 'buyer_last_name' => 'required',

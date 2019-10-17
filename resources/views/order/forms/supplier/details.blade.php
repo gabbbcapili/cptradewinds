@@ -3,9 +3,13 @@
 			<div class="row">
 				<div class="col-sm-4">
 					<label>Supplier Name:</label>
-					{{ $order->supplier_by->name }} {{ $order->supplier_by->last_name }}
+					@if($order->supplier_by)
+						{{ $order->supplier_by->name }} {{ $order->supplier_by->last_name }}
+					@endif
 					<br><label>Supplier Email:</label>
-					{{ $order->supplier_by->email }}
+					@if($order->supplier_by)
+						{{ $order->supplier_by->email }}
+					@endif
 					<br><label>Supplier Location:</label>
 					{{ $order->location }}
 				</div>
@@ -38,7 +42,7 @@
 			  </div>
 			</div>
 		</div> <!--box end-->
-
+			@if(! $order->status == 2)
 		<div class="box box-solid">
 			<div class="container-fluid">
     			<h3>Boxes:</h3>
@@ -92,6 +96,10 @@
 	            </div>
             <!-- /.box-body -->
           </div> <!-- box-end -->
+
+          @else
+          @include('order/forms/customer/editBoxes')
+          @endif
 
 
 

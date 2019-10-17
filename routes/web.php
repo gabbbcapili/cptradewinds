@@ -76,6 +76,10 @@ Route::get('orders/editDue/{order}', 'OrderController@editDue')->middleware('adm
 Route::put('orders/updateDue/{order}', 'OrderController@updateDue')->middleware('admin');
 
 
+Route::put('orders/updateBoxes/{order}', 'OrderController@updateBoxes');
+
+
+
 
 Route::get('orders/approvePayment/{order}', 'OrderController@approvePayment')->middleware('admin');
 Route::get('orders/declinePayment/{order}', 'OrderController@declinePayment')->middleware('admin');

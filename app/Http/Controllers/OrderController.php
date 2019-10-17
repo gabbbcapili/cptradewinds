@@ -485,7 +485,7 @@ class OrderController extends Controller
              abort(401);
         }
         // pending 
-        if(! ($order->status >= 3  && $order->status <= 11)){
+        if(! ($order->status >= 2  && $order->status <= 11)){
             abort(401, "Sorry, this order can't be edited.");
         }
        
@@ -541,7 +541,7 @@ class OrderController extends Controller
          }
          $order->UpdateTotalCBM();
          $order->UpdateTotalWeight();
-        request()->session()->flash('status', 'Successfully Updated an Order! Next step: Print Shipping Marks.');
+        request()->session()->flash('status', 'Successfully Updated an Shipment! Next step: Print Shipping Marks.');
 
         $status = $order->withQuote == false ? 6 : 4;
 
@@ -552,6 +552,63 @@ class OrderController extends Controller
         return response()->json(['success' => 'Success']);
         }
     }
+
+    public function updateBoxes(Request $request, Order $order, Mailer $mailer)
+    {
+        // cancelled
+        if($order->status != 2){
+            return response()->json(['status' => 'Sorry, this order cant be edited. Invalid Status']);
+        }
+
+        if( $order->user_id != request()->user()->id){
+             return response()->json(['status' => 'Sorry, Unauthorized user.']);
+        }
+        if($request->input(['product']) == null){
+            return response()->json(['status' => 'Sorry, Please add some boxes first.']);
+        }
+
+        $validator = Validator::make($request->all(), $this->ValidatorUtil->validateBoxes(), $this->ValidatorUtil->orderValidationMessages());
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()]);
+            }
+        $updated_detail_ids = [];
+        if ($validator->passes()){
+            $details = $request->input(['product']);
+            if(!$details == null ){
+                foreach($details as $detail){
+                    if(isset($detail['detail_id'])){
+                        $orderDetails = OrderDetails::findOrFail($detail['detail_id']);
+                        $updated_detail_ids[] = $orderDetails->id;
+                        $orderDetails->update($detail);
+                    }else{
+                        $orderDetail = new OrderDetails($detail);
+                        $newOrders[] = $orderDetail;
+                    }
+                }
+                $deleteOrderDetails = OrderDetails::where('order_id', $order->id)
+                                ->whereNotIn('id', $updated_detail_ids)
+                                ->delete();
+                if (!empty($newOrders)) {
+                 $order->details()->saveMany($newOrders);
+             }
+         }
+         $order->UpdateTotalCBM();
+         $order->UpdateTotalWeight();
+        request()->session()->flash('status', 'Successfully Updated an Shipment! Please wait for admin approval.');
+
+        // $status = $order->withQuote == false ? 1 : 4;
+        $status = 4;
+        $order->update(['status' => $status, 'price' => null]);
+        if($order->withQuote == true){
+            $mailer->to(env('ADMIN1'))->send(new AdminRemindMail(action('OrderController@addQuotation', $order->id)));
+        }
+        return response()->json(['success' => 'Success', 'redirect' => action('OrderController@show', [$order->id])]);
+        }
+    }
+
+
+
 
     /**
      * Remove the specified resource from storage.
@@ -614,11 +671,7 @@ class OrderController extends Controller
         
     }
 
-public function approve(Order $order){
-
-    }
-
-    public function cancel(Order $order, Request $request){
+    public function cancel(Order $order, Request $request, Mailer $mailer){
          if ($order->user_id != $request->user()->id && ! $request->user()->isAdmin() && $order->supplier_id != $request->user()->id){
             return response()->json(['error' => 'Unauthorized']);
         }
@@ -627,8 +680,11 @@ public function approve(Order $order){
             return response()->json(['error' => 'Only pending request can be cancelled!']);
         }
 
-    OrderLogs::create(['order_id' => $order->id, 'description' => $request->user()->name . ' cancelled the transaction.']);
+        OrderLogs::create(['order_id' => $order->id, 'description' => $request->user()->name . ' cancelled the transaction.']);
        $order->update(['status' => 2]);
+       if($order->ordered_by != null){
+            $mailer->to($order->ordered_by->email)->send(new DynamicEmail(['order' => $order], 'Shipment: '. $order->shipment_id . ' was Cancelled' , 'mails.order.CancelledByAdmin'));
+       }
        request()->session()->flash('success' , 'Successfully Cancelled Shipment.');
 
         return response()->json(['success' => 'Successfully canceled!']);

@@ -63,9 +63,20 @@
                              Continue/Cancel Shipment
                            </a>
                             @endif
+                            @if($order->status == 2 && auth()->user()->isCustomer())
+                              <a href="{{ action('OrderController@edit', $order->id) }}" class="btn"><i class="glyphicon glyphicon-edit"></i>
+                                 Edit Details
+                               </a>
+                            @endif
+
                             @if(($order->status == 1) && (auth()->user()->isCustomer()))
                             <a href="#" class="confirmation btn" data-title="Are you sure to cancel this transaction?" data-text="Once cancelled, you will not be able undo this action!"  data-href="{{ action('OrderController@cancel', $order->id) }}"><i class="fa fa-ban"></i> Cancel</a>
                             @endif
+
+                            @if($order->status == 4 && auth()->user()->isAdmin())
+                              <a href="#" class="confirmation btn" data-title="Are you sure to cancel this transaction?" data-text="Once cancelled, you will not be able undo this action!"  data-href="{{ action('OrderController@cancel', $order->id) }}"><i class="fa fa-ban"></i> Cancel/Bogus</a>
+                            @endif
+
                   <!--           @if(($order->status == 3) && (auth()->user()->isSupplier()))
                             <a href="#" class="confirmation btn" data-title="Are you sure to cancel this transaction?" data-text="Once cancelled, you will not be able undo this action!"  data-href="{{ action('OrderController@cancel', $order->id) }}"><i class="fa fa-ban"></i> Cancel Shipment</a>
                             @endif -->
