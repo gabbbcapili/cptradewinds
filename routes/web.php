@@ -37,6 +37,7 @@ Route::resource('clearance', 'ClearanceController')->middleware('auth');
 
 Route::resource('source', 'SourceController')->middleware('admin');
 
+Route::get('orders/addQuotation/no-login/{token}', 'OrderController@addQuotation')->name('addQuotationNoLogin');
  
 Route::get('orders/cancel/{order}', 'OrderController@cancel');
 
@@ -45,7 +46,7 @@ Route::put('orders/addDimension/{order}', 'OrderController@updateDimension')->mi
 
 Route::get('orders/approve/{order}', 'OrderController@approve')->middleware('supplier');
 Route::get('orders/addQuotation/{order}', 'OrderController@addQuotation')->middleware('admin');
-Route::put('orders/addQuotationStore/{order}', 'OrderController@addQuotationStore')->middleware('admin');
+Route::put('orders/addQuotationStore/{order}', 'OrderController@addQuotationStore');
 
 Route::get('absorb/token/{token}', 'OrderController@ConsumeToken');
 

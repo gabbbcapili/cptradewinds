@@ -24,6 +24,7 @@ class CreateOrderhhTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedInteger('supplier_id')->nullable();
             $table->unsignedInteger('source_id')->nullable();
+            $table->string('token');
             // supplier
             $table->string('supplier')->nullable();
             $table->string('email')->nullable();

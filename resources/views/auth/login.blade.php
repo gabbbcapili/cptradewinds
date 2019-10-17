@@ -71,7 +71,6 @@
 
 @section('javascript')
 <script type="text/javascript">
-    console.log('hey');
 @if(Session::has('status'))
 console.log('{{ Session::get('status') }}')
  toastr.{{ Session::get('alert-class', 'success') }}('{{ Session::get('status') }}', '', {timeOut: 10000})

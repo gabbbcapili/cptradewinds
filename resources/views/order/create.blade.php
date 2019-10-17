@@ -1,8 +1,6 @@
 @inject('request', 'Illuminate\Http\Request')
 
  @extends(Auth::user()? 'layouts.base' : 'layouts.quotation')
-
-
 @section('title',  $title)
 @section('css')
  <link rel="stylesheet" href="{{ asset('css/order.css') }}" >

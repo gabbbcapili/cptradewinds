@@ -14,7 +14,7 @@ class Order extends Model
     //
      protected $table = 'orderhh';
 
-     protected $fillable = ['supplier', 'email', 'user_id', 'supplier_id', 'status', 'import_details', 'location', 'cbm', 'weight', 'price', 'price_date' , 'warehouse', 'payment', 'payment_date' , 'quoteFor', 'boxes', 'pickup_location', 'withQuote', 'shipment_id', 'invoice_no', 'shipment_proof','boxes_received', 'source_id'];
+     protected $fillable = ['supplier', 'email', 'user_id', 'supplier_id', 'status', 'import_details', 'location', 'cbm', 'weight', 'price', 'price_date' , 'warehouse', 'payment', 'payment_date' , 'quoteFor', 'boxes', 'pickup_location', 'withQuote', 'shipment_id', 'invoice_no', 'shipment_proof','boxes_received', 'source_id', 'token'];
      
      public function details(){
      	return $this->hasMany(OrderDetails::class, 'order_id', 'id')->whereNull('type');

@@ -39,7 +39,7 @@ class OrderController extends Controller
      */
     public function __construct(ValidatorUtil $validatorUtil){
         $this->ValidatorUtil = $validatorUtil;
-        $this->middleware('auth', ['except' => ['ConsumeToken', 'create', 'store']]);
+        $this->middleware('auth', ['except' => ['ConsumeToken', 'create', 'store', 'addQuotation', 'addQuotationStore']]);
         // $this->middleware('supplier', ['only' => ['edit', 'update']]);
 
     }
@@ -79,8 +79,13 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(Request $request, Mailer $mailer)
     {
+        // $mailer->to(env('ADMIN1'))->send(new AdminRemindMail(route('addQuotationNoLogin', ['token' =>])));
+
+
+
+
         if($request->input('clientid') != null){
                if( $request->user()){
                 if($request->user()->isSupplier()){
@@ -147,6 +152,7 @@ class OrderController extends Controller
         $token = OrderKey::get_available_key();
         $url = action('OrderController@ConsumeToken', [$token]);
         $header = ($request->only(['supplier','email', 'location' , 'import_details', 'warehouse', 'pickup_location', 'invoice_no', 'source']));
+        $header['token'] = uniqid();
         if($header['source']){
             $source = Source::where('name', $header['source'])->first();
             if(! $source){
@@ -210,7 +216,7 @@ class OrderController extends Controller
                 $mailer->to($mail_to)->send(new ConsumeTokenMail($mailDetails));
                 $mailer->to(env('ADMIN1'))->send(new DynamicEmail(['order' => $order, 'inputs' => $request->all()], $mailTitle , 'mails.order.OrderDetails'));
             }else{
-                $mailer->to(env('ADMIN1'))->send(new AdminRemindMail(action('OrderController@addQuotation', $order->id)));
+                $mailer->to(env('ADMIN1'))->send(new AdminRemindMail(route('addQuotationNoLogin', ['token' => $order->token])));
             }
             
             OrderLogs::create(['order_id' => $order->id, 'description' => $request->user()->name . ' created this transaction.']);
@@ -280,7 +286,7 @@ class OrderController extends Controller
            $mailer->to($request->user()->email)->send(new DynamicEmail($order, $mailTitle , 'mails.order.Instruction'));
            $mailer->to(env('ADMIN1'))->send(new DynamicEmail(['order' => $order, 'inputs' => $request->all()], $mailTitle , 'mails.order.OrderDetails'));
             }else{
-                $mailer->to(env('ADMIN1'))->send(new AdminRemindMail(action('OrderController@addQuotation', $order->id)));
+                $mailer->to(env('ADMIN1'))->send(new AdminRemindMail(route('addQuotationNoLogin', ['token' => $order->token])));
             }
            OrderLogs::create(['order_id' => $order->id, 'description' => $request->user()->name . ' created this transaction.']);
            $request->session()->flash('success', 'We have sent you an email regarding your login credentials');
@@ -601,7 +607,7 @@ class OrderController extends Controller
         $status = 4;
         $order->update(['status' => $status, 'price' => null]);
         if($order->withQuote == true){
-            $mailer->to(env('ADMIN1'))->send(new AdminRemindMail(action('OrderController@addQuotation', $order->id)));
+            $mailer->to(env('ADMIN1'))->send(new AdminRemindMail(route('addQuotationNoLogin'), Hash::make($order->id)));
         }
         return response()->json(['success' => 'Success', 'redirect' => action('OrderController@show', [$order->id])]);
         }
@@ -712,9 +718,15 @@ class OrderController extends Controller
         return response()->json(['success' => 'Successfully requested quotation!']);
      }
 
-     public function addQuotation(Order $order){
+     public function addQuotation(Order $order, Request $request){
+        if($request->segment(4)){
+            $order = Order::where('token', $request->segment(4))->first();
+            if($order == null){
+                abort(404);
+            }
+        }
             if (!($order->status == 4 || $order->status == 3)){
-                abort(401, 'Unauthorized, this transaction is not yet for Quatation.');
+                abort(401, 'Unauthorized, this transaction is not yet for Quotation.');
             }
             return view('order.addQuotation', compact('order'));
      }
