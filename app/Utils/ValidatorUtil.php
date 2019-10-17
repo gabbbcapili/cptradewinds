@@ -87,8 +87,8 @@ class ValidatorUtil{
                 'product.*.width.regex' => 'This field must be formatted as ##.##',
                 'product.*.height.regex' => 'This field must be formatted as ##.##',
                 'product.*.weight.regex' => 'This field must be formatted as ##.##',
-                'buyer_email.unique' => 'This email already exist. <a href="{{ route(\'login\') }}">  Login here</a>',
-                'email.unique' => 'This email already exist. <a href="{{ route(\'login\') }}">  Login here</a>',
+                'buyer_email.unique' => 'This email already exist. <a href="'. route("login"). '">  Login here</a>',
+                'email.unique' => 'This email already exist. <a href="'. route("login"). '">  Login here</a>',
                 'buyer_last_name.required' => 'This field is required',
                 'supplier_last_name.required' => 'This field is required',
         ];
