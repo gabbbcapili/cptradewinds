@@ -26,19 +26,19 @@
               <div class="table-responsive">
               <table id="order_list" class="table table-bordered table-striped">
                 <thead>
-                <tr>
-                  <th class="text-center">Shipment ID</th>
-                  <th class="text-center">Date</th>
-                  @if($request->user()->isAdmin())
-                    <th class="text-center">Source</th>
-                  @endif
-                  <!-- <th class="text-center">Logs</th> -->
-                  @if(request()->segment(1) == 'quotation')
-                  <th class="text-center">Price</th>
-                  @endif
-                  <th class="text-center">Status</th>
-                  <th class="text-center">Action</th>
-                </tr>
+                  <tr>
+                    <th class="text-center">Shipment ID</th>
+                    <th class="text-center">Date</th>
+                    @if($request->user()->isAdmin())
+                      <th class="text-center">Source</th>
+                    @endif
+                    <!-- <th class="text-center">Logs</th> -->
+                    @if(request()->segment(1) == 'quotation')
+                    <th class="text-center">Price</th>
+                    @endif
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Action</th>
+                  </tr>
                 </thead>
                 <tbody>
                   @foreach($orders as $order)
@@ -234,11 +234,6 @@ $(document).ready( function(){
 
     $('#order_list').DataTable({
         aaSorting: [[0, 'desc']],
-        columnDefs: [ {
-        "targets": [3,4],
-        "orderable": false,
-        "searchable": false
-    }],
     });
     
     $('.confirmation').click(function(){

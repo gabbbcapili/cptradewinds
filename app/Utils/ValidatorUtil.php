@@ -21,6 +21,10 @@ class ValidatorUtil{
             'product.*.width' => 'required|regex:/^\d*(\.\d{1,2})?$/',
             'product.*.height' => 'required|regex:/^\d*(\.\d{1,2})?$/',
             'product.*.weight' => 'required|regex:/^\d*(\.\d{1,2})?$/',
+            'item.*.qty' => 'sometimes|required',
+            'item.*.unit' => 'sometimes|required',
+            'item.*.name' => 'sometimes|required',
+
         ];
 	}
 
@@ -68,10 +72,16 @@ class ValidatorUtil{
             'user_type' => 'required|in:buyer,supplier',
             'buyer_name' => 'required|max:30',
             'buyer_email' => 'required|email|max:50',
+            'item.*.qty' => 'sometimes|required',
+            'item.*.unit' => 'sometimes|required',
+            'item.*.name' => 'sometimes|required',
         ];
     }
 	public function orderValidationMessages(){
 		return [
+                'item.*.qty.required' => 'This field is required.',
+                'item.*.unit.required' => 'This field is required.',
+                'item.*.name.required' => 'This field is required.',
                 'product.*.qty.required' => 'This field is required.',
                 'product.*.length.required' => 'This field is required.',
                 'product.*.width.required' => 'This field is required.',

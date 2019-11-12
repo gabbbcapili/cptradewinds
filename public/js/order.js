@@ -2,7 +2,7 @@
 	function addRow(){
 		var row = parseInt($('#rowcount').val()) + 1;
 		$('#rowcount').val(row);
-		var html = '<tr><td><span class="sr_number">'+row+'</span></td>';
+		var html = '<tr class="tableTR"><td><span class="sr_number">'+row+'</span></td>';
 		html += '<td><input type="text" class="form-control input-sm" value="1" name="product['+row+'][qty]" id="product.'+row+'.qty" style="text-align: center;"></td>';
 		html += '<td><select class="form-control input-table-select" id="product.'+row+'.measurement" name="product['+row+'][measurement]"><option value="cm">Centimeters</option><option value="m">Meters</option><option value="in">Inches</option><option value="ft">Feet</option></select></td>';
 		html += '<td><input type="text" class="form-control input-sm" name="product['+row+'][length]" id="product.'+row+'.length"></td>';
@@ -14,9 +14,21 @@
 		update_table_sr_number();
 	}
 
+	function addItem(){
+		var row = parseInt($('#itemRowCount').val()) + 1;
+		$('#itemRowCount').val(row);
+		var html = '<tr class="tableTR"><td><span class="sr_number">'+row+'</span></td>';
+		html += '<td><input type="text" class="form-control input-sm" value="1" name="item['+row+'][qty]" id="item.'+row+'.qty" style="text-align: center;"></td>';
+		html += '<td><input type="text" list="units" class="form-control input-sm" name="item['+row+'][unit]" id="item.'+row+'.unit" style="text-align: center;"></td>';
+		html += '<td><input type="text" class="form-control input-sm" name="item['+row+'][name]" id="item.'+row+'.name"></td>';
+		html += '<td><i class="fa fa-times remove_order_entry_row text-danger" title="Remove" style="cursor:pointer;"></i></td></tr>';
+		$('#items_table tr:last').after(html);
+		update_table_sr_number();
+	}
 
 	$( document ).ready(function() {
-  		addRow();
+  		// addRow();
+  		// addItem();
 	});
 
 $(document).on( 'click', '.remove_order_entry_row', function(){
@@ -26,6 +38,10 @@ $(document).on( 'click', '.remove_order_entry_row', function(){
 function update_table_sr_number(){
     var sr_number = 1;
     $('table#orders_table tbody').find('.sr_number').each( function(){
+        $(this).text(sr_number);
+        sr_number++;
+    });
+    $('table#items_table tbody').find('.sr_number').each( function(){
         $(this).text(sr_number);
         sr_number++;
     });
@@ -47,19 +63,21 @@ function update_table_sr_number(){
 			    processData: false,
 			    contentType: false,
 				success: function(data){
+					console.log(data);
 					if (data.success){
-						console.log(data.success);
-						if('{{ $request->segment(1) }}' == 'quotation'){
-							window.location.replace("/quotation");
-						}else{
-							window.location.replace("/orders");
-						}
+						// if('{{ $request->segment(1) }}' == 'quotation'){
+						// 	window.location.replace("/quotation");
+						// }else{
+						// 	window.location.replace("/orders");
+						// }
+						window.location.replace(redirect);
 					}
 					if (data.info){
 						toastr.error(data.info);
 					}
 			        if (data.error){
 			        	// console.log(data.error);
+			        	toastr.error('Please check for errors');
 			        	$('.error').remove();
 			        	$.each(data.error, function(index, val){
 			        		//console.log(index + '\n' + val)

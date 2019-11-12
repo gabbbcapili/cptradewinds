@@ -70,7 +70,7 @@
             <a href="/quotation/create" class="get-quote-btn first">GET A QUOTE</a>
           </li>
           <li>
-            <a href="/quotation/create" class="get-quote-btn">START A SHIPMENT</a>
+            <a href="/shipment/create" class="get-quote-btn">START A SHIPMENT</a>
           </li>              
         </ul>
       </div>

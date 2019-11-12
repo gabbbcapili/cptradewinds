@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\OrderDetails;
 use App\OrderKey;
+use App\OrderItems;
 use GuzzleHttp\Client;
 use App\Source;
 
@@ -18,6 +19,10 @@ class Order extends Model
      
      public function details(){
      	return $this->hasMany(OrderDetails::class, 'order_id', 'id')->whereNull('type');
+     }
+
+     public function items(){
+      return $this->hasMany(OrderItems::class, 'order_id', 'id');
      }
 
      public function types(){

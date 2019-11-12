@@ -45,7 +45,6 @@ class OrderController extends Controller
     }
     public function index(Request $request, Mailer $mailer)
     {
-        
         if($request->user()->isAdmin3()){
          return response()->json(['error' => 'Unauthorized, invalid user.']);
       }
@@ -88,6 +87,8 @@ class OrderController extends Controller
                     if (! $user->isCustomer()) {
                         abort(404);
                     }
+                }else{
+                    abort(401);
                 }
             }
         }
@@ -138,9 +139,25 @@ class OrderController extends Controller
     if ($validator->fails()) {
         return response()->json(['error' => $validator->errors()]);
         }
-        if($request->input(['product']) == null){
-            return response()->json(['info' => 'Please add box(es) first.']);
-        }          
+        if($request->user()){
+            if($request->user()->isCustomer()){
+                if($request->input(['item']) == null){
+                    return response()->json(['info' => 'Please add item(s) first.']);
+                }   
+            }else if ($request->user()->isSupplier()){
+                if($request->input(['product']) == null){
+                    return response()->json(['info' => 'Please add box(es) first.']);
+                }  
+            }
+        }else if($request->input('user_type') == 'supplier'){
+            if($request->input(['product']) == null){
+                    return response()->json(['info' => 'Please add box(es) first.']);
+                }  
+        }else if($request->input('user_type') == 'buyer'){
+            if($request->input(['item']) == null){
+                    return response()->json(['info' => 'Please add item(s) first.']);
+                }  
+        }       
     if ($validator->passes()){
         $user_id = $request->input('user_id', null);
         $order_type = $request->input('order_type');
@@ -158,25 +175,35 @@ class OrderController extends Controller
         if($order_type == 'quotation'){
             $header['withQuote'] = true;
             $header['status'] = 4;
+            if($user_id == null){
+                $header['status'] = 1;
+            }
+            if($request->input('user_type') == 'supplier'){
+                $header['status'] = 4;    
+            }
         }else{
             $header['withQuote'] = false;
-            $header['status'] = 1;
+            if($user_id == null){
+                $header['status'] = 1;
+            }else{
+                $header['status'] = 6;
+            }  
         }
         $details = ($request->input(['product']));
+        $items = ($request->input(['item']));
         if ($request->input('user_type') == null){
             // not guess
             if (request()->user()){ 
                 if (request()->user()->isSupplier()){
                     $header['supplier_id'] = auth()->user()->id; 
                     $header['user_id'] = $user_id;
-                    // $header['status'] = $user_id == null ? '1':'3' ;
                     request()->session()->flash('status', 'Shipment Added Successfully!');
                 }
                 if (request()->user()->isCustomer()){
                     $header['user_id'] = auth()->user()->id;
                     // $header['status'] = 1;
                 }
-           
+
            $order = Order::create($header);
 
            $order->updateShipmentID();
@@ -196,6 +223,11 @@ class OrderController extends Controller
                 $order->UpdateTotalWeight();
                 $order->UpdateTotalCBM();    
            }
+           if (!$items == null){
+                foreach($items as $item){
+                    $order->items()->create($item);
+                }
+            }
             $mail_to = null;
             $mailDetails = ['name' => $request->user()->name, 'email' => $request->user()->email, 'url' => $url, 'order_id' => $order->id, 'order' => $order , 'from' => $request->user()->role, 'to' => request()->user()->getOppositeRole(), 'mailTitle' => $mailTitle];
             if($request->user()->role == 'supplier'){
@@ -208,10 +240,16 @@ class OrderController extends Controller
             if($order->withQuote == false){
                 $mailer->to($request->user()->email)->send(new DynamicEmail($order, $mailTitle , 'mails.order.Instruction'));
                 OrderKey::create(['token' => $token , 'order_id' => $order->id, 'type' => request()->user()->getOppositeRole()]);
-                $mailer->to($mail_to)->send(new ConsumeTokenMail($mailDetails));
                 $mailer->to(env('ADMIN1'))->send(new DynamicEmail(['order' => $order, 'inputs' => $request->all()], $mailTitle , 'mails.order.OrderDetails'));
+                if($user_id == null){
+                     $mailer->to($mail_to)->send(new ConsumeTokenMail($mailDetails));
+                }
             }else{
                 $mailer->to(env('ADMIN1'))->send(new AdminRemindMail(route('addQuotationNoLogin', ['token' => $order->token])));
+                if($user_id == null){
+                     OrderKey::create(['token' => $token , 'order_id' => $order->id, 'type' => request()->user()->getOppositeRole()]);
+                     $mailer->to($mail_to)->send(new ConsumeTokenMail($mailDetails));
+                }
             }
             
             OrderLogs::create(['order_id' => $order->id, 'description' => $request->user()->name . ' created this transaction.']);
@@ -276,6 +314,11 @@ class OrderController extends Controller
                 $order->UpdateTotalWeight();
                 $order->UpdateTotalCBM();    
            }
+           if (!$items == null){
+                foreach($items as $item){
+                    $order->items()->create($item);
+                }
+            }
            $order->updateShipmentID();
             if($order->withQuote == false){
            $mailer->to($request->user()->email)->send(new DynamicEmail($order, $mailTitle , 'mails.order.Instruction'));
@@ -507,8 +550,11 @@ class OrderController extends Controller
         if(!$order->status == 1 || !$order->status == 3 && $order->status != 4 && $order->status != 5){
             return response()->json(['status' => 'Sorry, this order cant be edited.']);
         }
+        if($order->details->count() == null){
+            return response()->json(['status' => 'Sorry, Please add some boxes first. (Update your boxes first)']);
+        }
         if($request->input(['product']) == null){
-            return response()->json(['status' => 'Sorry, Please add some boxes first.']);
+            return response()->json(['status' => 'Sorry, Please add some importing boxes first.']);
         }
 
         $validator = Validator::make($request->all(), $this->ValidatorUtil->validateAddType(),
@@ -557,13 +603,13 @@ class OrderController extends Controller
     public function updateBoxes(Request $request, Order $order, Mailer $mailer)
     {
         // cancelled
-        if($order->status != 2){
+        if($order->status != 2 && $order->status != 3 && $order->status != 4){
             return response()->json(['status' => 'Sorry, this order cant be edited. Invalid Status']);
         }
 
-        if( $order->user_id != request()->user()->id){
-             return response()->json(['status' => 'Sorry, Unauthorized user.']);
-        }
+        // if( $order->user_id != request()->user()->id){
+        //      return response()->json(['status' => 'Sorry, Unauthorized user.']);
+        // }
         if($request->input(['product']) == null){
             return response()->json(['status' => 'Sorry, Please add some boxes first.']);
         }
@@ -573,6 +619,7 @@ class OrderController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()]);
             }
+        $count_orders = $order->details->count();
         $updated_detail_ids = [];
         if ($validator->passes()){
             $details = $request->input(['product']);
@@ -598,13 +645,16 @@ class OrderController extends Controller
          $order->UpdateTotalWeight();
         request()->session()->flash('status', 'Successfully Updated an Shipment! Please wait for admin approval.');
 
-        // $status = $order->withQuote == false ? 1 : 4;
-        $status = 4;
+        $status = $order->withQuote == false ? 6 : 4;
+        if($order->withQuote == false || $count_orders == 0){
+            $status = 3;
+        }
         $order->update(['status' => $status, 'price' => null]);
+        $order->update(['price'=> null]);
         if($order->withQuote == true){
             $mailer->to(env('ADMIN1'))->send(new AdminRemindMail(route('addQuotationNoLogin', ['token' => $order->token])));
         }
-        return response()->json(['success' => 'Success', 'redirect' => action('OrderController@show', [$order->id])]);
+        return response()->json(['success' => 'Success', 'redirect' => action('OrderController@edit', [$order->id])]);
         }
     }
 

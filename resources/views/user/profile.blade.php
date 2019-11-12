@@ -18,9 +18,22 @@
 			<h4>
 			Client Id: {{ request()->user()->id }}
 			</h4>
-<!-- 			<br>
-			Please send this link to your supplier: <u style="color:blue" id="link" onclick="copyToClipboard('link')">{{ Action('OrderController@create', ['clientid='.request()->user()->id]) }}</u>
-			&nbsp  <button class="btn btn-sm" onclick="copyToClipboard('link')" data-toggle="tooltip" data-placement="top" title="Copy to Clipboard"><i class="fa fa-copy"></i>Copy</button> -->
+			<br>
+			
+      @if(request()->user()->isCustomer())
+        Please send this link to your supplier:<br>
+
+        <br>For Quotation: <u style="color:blue" id="quotationLink" onclick="copyToClipboard('quotationLink')">{{ route('quotationcreate', ['clientid='.request()->user()->id]) }}</u>
+        &nbsp  <button class="btn btn-sm" onclick="copyToClipboard('quotationLink')" data-toggle="tooltip" data-placement="top" title="Copy to Clipboard"><i class="fa fa-copy"></i>Copy</button>
+        <br>
+        <br>For Shipment: <u style="color:blue" id="shipmentLink" onclick="copyToClipboard('shipmentLink')">{{ route('shipmentcreate', ['clientid='.request()->user()->id]) }}</u>
+        &nbsp  <button class="btn btn-sm" onclick="copyToClipboard('shipmentLink')" data-toggle="tooltip" data-placement="top" title="Copy to Clipboard"><i class="fa fa-copy"></i>Copy</button>
+      @endif
+
+
+
+
+      
    <!--    <br>
       or -->
       <br>

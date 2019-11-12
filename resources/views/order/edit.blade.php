@@ -15,7 +15,7 @@
     	<!-- Details -->
 		@include('order/forms/supplier/details')
 		@if(request()->user()->isSupplier())
-			@if($order->status == 3)
+			@if($order->status == 3 && $order->withQuote == false)
 	          <!-- Add Type -->
 	          @include('order/forms/supplier/addType')
 	          <!-- Add Type -->

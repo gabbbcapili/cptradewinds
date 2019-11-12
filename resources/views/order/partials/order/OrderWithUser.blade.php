@@ -1,6 +1,10 @@
     	<div class="box box-solid">
 	    		<div class="container-fluid">
-	    			<h3>{{ request()->user()->isCustomer() == true ? 'Supplier' : 'Buyer' }} Details:*</h3>
+	    			@if(request()->input('clientid'))
+	    				<h3>{{ ucfirst(request()->segment(1)) }} Details:*</h3>
+	    			@else
+	    				<h3>{{ request()->user()->isCustomer() == true ? 'Supplier' : 'Buyer' }} Details:*</h3>
+	    			@endif
 	    		</div>
 			<div class="box-body">
 				@if (request()->user()->isCustomer())
@@ -16,6 +20,7 @@
 				</div>
 					@endif
 					@if (request()->user()->isSupplier())
+						@if(! request()->input('clientid'))
 						<div class="row">
 							<div class="col-sm-4">
 								<label for="supplier">Buyer Name:*</label>
@@ -30,6 +35,7 @@
 								<input type="text" class="form-control" name="buyer_mobile_number" id="buyer_mobile_number">
 							</div>
 						</div>
+						@endif
 					@endif
 				<br>
 				<div class="row">

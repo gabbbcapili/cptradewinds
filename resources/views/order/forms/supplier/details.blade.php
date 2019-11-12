@@ -42,7 +42,45 @@
 			  </div>
 			</div>
 		</div> <!--box end-->
-			@if(! $order->status == 2)
+
+@if($order->items->count() != 0)
+   <div class="box box-solid">
+	<div class="box-body">
+		<div class="row">
+			<div class="container-fluid text-center">
+				<h2>Items: <i class="fa fa-check fa-lg green"></i></h2>
+			</div>
+		</div>
+			<div class="table-responsive">
+              <table id="item_table" class="table table-bordered table-condensed text-center center-div">
+                <thead>
+                <tr class="input-table-tr">
+                  <th class="input-table-count">#</th>
+                  <th class="input-table-qty">Qty</th>
+                  <th class="input-table-select">Unit</th>
+                  <th class="input-table-select">Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                	@foreach($order->items as $item)
+                <tr>
+                  <td><span class="sr_number">1</span></td>
+                  	<td><input type="text" class="form-control input-sm" value="{{ $item->qty }}" style="text-align: center;" readonly="readonly"></td>
+                  	<td><input type="text" class="form-control input-sm" value="{{ $item->unit }}" style="text-align: center;" readonly="readonly"></td>
+                  	<td><input type="text" class="form-control input-sm" value="{{ $item->name }}" style="text-align: center;" readonly="readonly"></td>
+                  	<td> </td>
+                </tr>
+                @endforeach
+                </tbody>
+              </table>
+            </div>
+        </div>
+        <!-- /.box-body -->
+      </div> <!-- box-end -->
+@endif
+
+
+	@if(! $order->status == 2)
 		<div class="box box-solid">
 			<div class="container-fluid">
     			<h3>Boxes:</h3>
@@ -100,11 +138,6 @@
           @else
           @include('order/forms/customer/editBoxes')
           @endif
-
-
-
-
-
           <!-- add type -->
       @if($order->status >= 6)
 
