@@ -80,7 +80,7 @@
               </li>  
 
                <li class="nav-item" style="">
-                <a href="/quotation/create" class="nav-link get-quote-btn">START A SHIPMENT</a>
+                <a href="/shipment/create" class="nav-link get-quote-btn">START A SHIPMENT</a>
               </li>  
 
               </ul>

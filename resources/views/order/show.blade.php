@@ -53,9 +53,9 @@
 				</div>
 				<div class="col-sm-4">
 					<label>Date:</label>
-					{{ date_format(date_create($order->created_at), 'M, d Y H:i') }}<br>
-					<label>Importing:</label>
-					<font style="word-wrap: break-word;">{{ $order->import_details }}</font>
+					{{ date_format(date_create($order->created_at), 'M, d Y H:i') }}
+					<!-- <label>Importing:</label> -->
+					<!-- <font style="word-wrap: break-word;">{{ $order->import_details }}</font> -->
 					@if(request()->user()->isAdmin() || request()->user()->isSupplier())
 						@if($order->warehouse)
 						<br><label>Warehouse:</label>

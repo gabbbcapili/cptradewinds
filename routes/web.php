@@ -38,8 +38,6 @@ Route::resource('clearance', 'ClearanceController')->middleware('auth');
 Route::resource('source', 'SourceController')->middleware('admin');
 
 Route::get('orders/addQuotation/no-login/{token}', 'OrderController@addQuotation')->name('addQuotationNoLogin');
-Route::get('orders/addBoxes/no-login/{token}', 'OrderController@addQuotation')->name('addQuotationNoLogin');
- 
 
 Route::get('orders/cancel/{order}', 'OrderController@cancel');
 

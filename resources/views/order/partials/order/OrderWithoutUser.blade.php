@@ -94,11 +94,12 @@
 						</select>
 					</div>
 				</div><br>
-				<div class="row">
+
+				<!-- <div class="row">
 					<div class="col-sm-8">
 						<label for="address">What are you importing?:*</label>
 						<textarea class="form-control" rows="5" name="import_details" id="import_details" style="resize:vertical;" placeholder='Please be specific. For example, you may write “Building Blocks” instead of “Toys”'></textarea>
 					</div>
-				</div>
+				</div> -->
 			</div>
 		</div> <!--box end-->

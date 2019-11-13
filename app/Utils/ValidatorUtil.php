@@ -62,7 +62,7 @@ class ValidatorUtil{
             'supplier' => 'required|max:30',
             'email' => 'required|email|max:50',
             'location' => 'required',
-            'import_details' => 'required',
+            'import_details' => 'sometimes|required',
             'product.*.measurement' => 'required',
             'product.*.qty' => 'required|integer|min:1',
             'product.*.length' => 'required|regex:/^\d*(\.\d{1,2})?$/',

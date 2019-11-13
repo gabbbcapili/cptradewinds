@@ -302,6 +302,7 @@ class OrderController extends Controller
                     $request->session()->flash('status', 'Import process initiated for shipment number #' . $order->id   .'. Your supplier will receive an email instructing them to follow our procedure.');
                     $mailer->to($request->input('email'))->send(new ConsumeTokenMail($mailDetails));
                 }else{
+                    $mailer->to($request->input('email'))->send(new ConsumeTokenMail($mailDetails));
                     $request->session()->flash('status', 'Successfully Submitted a Quotation!');
                 }
             }
