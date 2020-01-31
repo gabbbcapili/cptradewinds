@@ -25,7 +25,5 @@ Please make sure the shipping mark we issued is attached to each piece of your c
 <br>
 <label style="color:red">Anything found without the shipping mark will be confiscated during inspection in Manila. Please make sure your boxes are always marked.</label>
 
-<p>Your Order <b>Reference No</b>: <a href="{{ action('OrderController@index') }}">#{{ $order->id }} </a></p>
-
-
+<p>Your Order <b>Reference No</b>: <a href="{{ action('OrderController@edit', [$order->id] ) }}">#{{ $order->id }} </a></p>
 @endsection

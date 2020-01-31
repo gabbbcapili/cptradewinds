@@ -22,8 +22,14 @@
 					@if($order->ordered_by != null)
 					{{ $order->ordered_by->email }}
 					@endif
-					<br><label>Pickup Location:</label>
-					{{ $order->pickup_location }}
+					@if($order->pickup_location != null)
+						<br><label>Pickup Location:</label>
+						{{ $order->pickup_location }}
+					@endif
+					@if($order->notes != null && $order->status <= 5)
+						<br><label>Admin Notes:</label>
+						{{ $order->notes }}
+					@endif
 				</div>
 				<div class="col-sm-4">
 					<label>Importing:</label>
@@ -33,8 +39,18 @@
 					<br><label>Invoice Reference Number:</label>
 					#{{ $order->invoice_no }}
 					@if($order->price != null)
-					<br><label>Price:</label>
-					{{ number_format($order->price, 2) }}
+					<br><label>{{ $order->withQuote == true ? 'Quotation' : '' }} Importation Cost:</label>
+					{{ number_format($order->price, 2) }} &nbsp&nbsp {{ date_format(date_create($order->price_date), 'M, d Y H:i') }}
+					@endif
+					@if($order->delivery_price != null)
+					<br><label>Delivery Price: </label> {{  number_format($order->delivery_price, 2) }}
+					<br><label>Delivery Address: </label> {{  $order->delivery_address }}
+					@endif
+					@if(request()->user()->isAdmin())
+						@if($order->boxes_received != null)
+						<br><label>Total Boxes CBM Received:</label>
+							{{ $order->boxes_received }}
+						@endif
 					@endif
 					<br><label>Shipment Status:</label>
 					{{ $order->get_status_display() }}
@@ -80,7 +96,7 @@
 @endif
 
 
-	@if(! $order->status == 2)
+	@if(! $order->status == 2 || ! request()->user()->isSupplier())
 		<div class="box box-solid">
 			<div class="container-fluid">
     			<h3>Boxes:</h3>

@@ -18,9 +18,16 @@ class OrderDetails extends Model
      }
 
      public function get_dimensional_weight(){
-     	$value = $this->length * $this->width * $this->height / 139;
+     	$value = $this->length +$this->width + $this->height;
+        $value = $value / 139;
         $value = $value * $this->qty;
      	return $value;
+     }
+
+     public static function get_dimensional_weight_static($length, $width, $height){
+        $value = $length + $width + $height / 139;
+        // $value = $value * $this->qty;
+        return $value;
      }
 
      public function get_img_url(){

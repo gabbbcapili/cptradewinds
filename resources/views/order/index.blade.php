@@ -63,7 +63,7 @@
                              Continue/Cancel Shipment
                            </a>
                             @endif
-                            @if($order->status == 2 && auth()->user()->isCustomer())
+                            @if($order->status == 2 && (auth()->user()->isCustomer() || auth()->user()->isSupplier()) )
                               <a href="{{ action('OrderController@edit', $order->id) }}" class="btn"><i class="glyphicon glyphicon-edit"></i>
                                  Edit Details
                                </a>
@@ -74,7 +74,8 @@
                             @endif
 
                             @if($order->status == 4 && auth()->user()->isAdmin())
-                              <a href="#" class="confirmation btn" data-title="Are you sure to cancel this transaction?" data-text="Once cancelled, you will not be able undo this action!"  data-href="{{ action('OrderController@cancel', $order->id) }}"><i class="fa fa-ban"></i> Cancel/Bogus</a>
+                          <!--     <a href="#" class="confirmation btn" data-title="Are you sure to cancel this transaction?" data-text="Once cancelled, you will not be able undo this action!"  data-href="{{ action('OrderController@cancel', $order->id) }}"><i class="fa fa-ban"></i> Cancel/Bogus</a> -->
+                              <a class="btn view_quotation" href="#" data-href="{{ action('OrderController@cancelForm', $order->id) }}"><i class="fa fa-ban"></i>Cancel/Bogus</a>
                             @endif
 
                   <!--           @if(($order->status == 3) && (auth()->user()->isSupplier()))
@@ -111,13 +112,14 @@
                     <!--         @if($order->status == 7 && auth()->user()->isSupplier())
                             <a href="#" class="btn choose_warehouse" data-href="{{ action('OrderController@getProofOfShipment', $order->id) }}"><i class="fa fa-plus"></i> Upload proof of shipment</a>
                             @endif -->
-                            @if($order->status == 8 && auth()->user()->isAdmin())
-                            <a href="#" class="btn choose_warehouse" data-href="{{ action('OrderController@editDue', $order->id) }}"><i class="fa fa-check"></i> Request for Payment</a>
-                            @endif
-                            @if($order->status == 9 && auth()->user()->isAdmin())
-                            <a href="#" class="btn confirmation" data-title="Are you sure to proceed this transaction?" data-text="If yes, you will not be able undo this action!" data-href="{{ action('OrderController@OnGoing', $order->id) }}"><i class="fa fa-check-square-o"></i> On-Going?</a>
+                             @if($order->status == 9 && auth()->user()->isCustomer())
+                              <a href="#" class="btn choose_warehouse" data-href="{{ action('OrderController@editDeliveryAddress', $order->id) }}"><i class="fa fa-check"></i> Update Delivery Address</a>
                             @endif
                             @if($order->status == 10 && auth()->user()->isAdmin())
+                            <a href="#" class="btn choose_warehouse" data-href="{{ action('OrderController@editDue', $order->id) }}"><i class="fa fa-check"></i> Request for Payment</a>
+                            @endif
+                           
+                            @if($order->status == 8 && auth()->user()->isAdmin())
                             <a href="#" class="btn confirmation" data-title="Are you sure to proceed this transaction?" data-text="If yes, you will not be able undo this action!" data-href="{{ action('OrderController@phArrived', $order->id) }}"><i class="fa fa-check-square-o"></i> Arrived (PH)</a>
                             @endif
                              @if($order->status == 11 && auth()->user()->isCustomer())
@@ -126,13 +128,17 @@
                            </a>
                             @endif
                             @if($order->status == 12 && auth()->user()->isAdmin())
-                            <a href="#" class="btn confirmation" data-title="Are you sure to approve this transaction payment / Request for pickup?" data-text="If yes, you will not be able undo this action!" data-href="{{ action('OrderController@approvePayment', $order->id) }}"><i class="fa fa-check-square-o"></i> Request for Pickup</a>
+                            <a href="#" class="btn confirmation" data-title="Are you sure to approve this transaction payment?" data-text="If yes, you will not be able undo this action!" data-href="{{ action('OrderController@approvePayment', $order->id) }}"><i class="fa fa-check-square-o"></i> Approve Payment</a>
                             @endif
                             @if($order->status == 12 && auth()->user()->isAdmin())
                             <a href="#" class="btn confirmation" data-title="Are you sure to decline this transaction payment?" data-text="If yes, you will not be able undo this action!" data-href="{{ action('OrderController@declinePayment', $order->id) }}"><i class="fa fa-remove"></i> Decline Payment</a>
                             @endif
                             @if($order->status == 13 && auth()->user()->isAdmin())
-                            <a href="#" class="btn confirmation" data-title="Are you sure to complete this transaction?" data-text="If yes, you will not be able undo this action!" data-href="{{ action('OrderController@completeTransaction', $order->id) }}"><i class="fa fa-check-square-o"></i> Delivered / Picked up?</a>
+                              @if($order->pickup_type == 'pickup')
+                              <a href="#" class="btn btn-primary confirmation" data-title="Are you sure to complete this transaction?" data-text="If yes, you will not be able undo this action!" data-href="{{ action('OrderController@completeTransaction', $order->id) }}"><i class="fa fa-check-square-o"></i>Picked up?</a>
+                              @elseif($order->pickup_type == 'deliver')
+                              <a href="#" class="btn modal_button" data-href="{{ action('OrderController@deliverForm', $order->id) }}"><i class="fa fa-check-square-o"></i> Delivered?</a>
+                              @endif
                             @endif
                             @if(($order->status >=1 && $order->status < 15 ) && (auth()->user()->isAdmin()))
                             <a href="#" class="confirmation btn red" data-title="Are you sure to delete this transaction?" data-text="Once deleted, you will not be able undo this action!"  data-href="{{ action('OrderController@delete', $order->id) }}"><i class="fa fa-ban"></i> Delete</a>

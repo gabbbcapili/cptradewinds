@@ -43,9 +43,11 @@
 				<div class="col-sm-4">
 					<label>Importing:</label>
 					<font style="word-wrap: break-word;">{{ $order->import_details }}</font>
-					@if(request()->user()->isAdmin() || request()->user()->isSupplier())
-					<br><label>Warehouse:</label>
-					{{ $order->warehouse }}
+					@if(request()->user())
+						@if(request()->user()->isAdmin() || request()->user()->isSupplier())
+						<br><label>Warehouse:</label>
+						{{ $order->warehouse }}
+						@endif
 					@endif
 				</div>
 

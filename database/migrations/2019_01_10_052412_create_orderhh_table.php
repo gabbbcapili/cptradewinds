@@ -19,7 +19,7 @@ class CreateOrderhhTable extends Migration
             $table->increments('id');
             $table->string('shipment_id')->nullable();
             $table->string('invoice_no')->nullable();
-            $table->enum('status', [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15])->default(1);
+            $table->string('status')->default(1);
             $table->unsignedInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedInteger('supplier_id')->nullable();
@@ -47,6 +47,17 @@ class CreateOrderhhTable extends Migration
             $table->string('price_date')->nullable();
             $table->string('payment')->nullable();
             $table->string('payment_date')->nullable();
+            $table->string('shipped_at')->nullable();
+            $table->string('delivery_address')->nullable();
+            $table->float('delivery_price', 15, 2)->nullable();
+            $table->string('pickup_type')->nullable();
+            // pickup deliver
+            $table->float('extra_charges', 15, 2)->default(0);
+            $table->string('delivery_receipt')->nullable();
+            $table->string('deliver_company_name')->nullable();
+            $table->string('pickup_person')->nullable();
+            $table->string('pickup_time')->nullable();
+            $table->string('notes')->nullable();
             $table->timestamps();
         });
         DB::update("ALTER TABLE orderhh AUTO_INCREMENT = 10000;");

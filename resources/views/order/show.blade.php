@@ -35,20 +35,54 @@
 					@endif
 					<br><label>Buyer Email:</label>
 					{{$order->ordered_by != null ? $order->ordered_by->email : '--'}}
-					@if($order->pickup_location != null)
-					<br><label>Pickup Location:</label>
-					{{ $order->pickup_location }}
+					@if($order->pickup_type != null)
+						<br><label>Pick-up Type: </label>
+						{{ $order->pickup_type }}
 					@endif
+					@if($order->notes != null && $order->status <= 5)
+						<br><label>Admin Notes:</label>
+						{{ $order->notes }}
+					@endif
+
+					@if($order->pickup_type == 'pickup')
+						@if($order->pickup_location != null)
+						<br><label>Pickup Location:</label>
+						{{ $order->pickup_location }}
+						@endif
+						<br><label>Pickup Person/Company:</label>
+						{{ $order->pickup_person }}
+						<br><label>Pickup Approx Time:</label>
+						{{ $order->pickup_time }}
+					@endif
+
+					@if($order->pickup_type == 'deliver')
+						<br><label>Delivery address:</label>
+						{{ $order->delivery_address }}
+						<br><label>Approximate Local Transport Fee:</label>
+						{{ number_format($order->delivery_price, 2) }}
+					@endif
+
+
+					
 					@if($order->payment != null)
 					<br><label>Proof of Payment:</label>
 					<a target="_blank" href="{{ $order->get_payment_url() }}"> {{ $order->payment }}</a>
 					@endif
+					@if($order->extra_charges != null)
+					<br><label>Extra Charges(Free Storage Penalty):</label>
+					 {{ $order->extra_charges ?  $order->extra_charges : 0}}
+					@endif
 					@if(request()->user()->isAdmin() && $order->status == 12)
 					<br><br>
-					 <a href="#" class="btn btn-primary confirmation" data-title="Are you sure to approve this transaction payment / Request for pickup?" data-text="If yes, you will not be able undo this action!" data-href="{{ action('OrderController@approvePayment', $order->id) }}"><i class="fa fa-check-square-o"></i> Request for Pickup</a>
+					 <a href="#" class="btn btn-primary confirmation" data-title="Are you sure to approve this transaction payment?" data-text="If yes, you will not be able undo this action!" data-href="{{ action('OrderController@approvePayment', $order->id) }}"><i class="fa fa-check-square-o"></i> Approve Payment</a>
 					@endif
 					@if($order->status == 13 && auth()->user()->isAdmin())
-                            <a href="#" class="btn btn-primary confirmation" data-title="Are you sure to complete this transaction?" data-text="If yes, you will not be able undo this action!" data-href="{{ action('OrderController@completeTransaction', $order->id) }}"><i class="fa fa-check-square-o"></i> Delivered / Picked up?</a>
+							@if($order->pickup_type == 'pickup')
+                            <a href="#" class="btn btn-primary confirmation" data-title="Are you sure to complete this transaction?" data-text="If yes, you will not be able undo this action!" data-href="{{ action('OrderController@completeTransaction', $order->id) }}"><i class="fa fa-check-square-o"></i>Picked up?</a>
+                            @elseif($order->pickup_type == 'deliver')
+                            <a href="#" class="btn btn-primary modal_button" data-href="{{ action('OrderController@deliverForm', $order->id) }}"><i class="fa fa-check-square-o"></i> Delivered?</a>
+                            @endif
+
                     @endif
 				</div>
 				<div class="col-sm-4">
@@ -65,12 +99,16 @@
 					<br><label>Invoice Reference Number:</label>
 					#{{ $order->invoice_no }}
 					@if($order->price != null)
-					<br><label>{{ $order->withQuote == true ? 'Quotation' : '' }} Price:</label>
+					<br><label>{{ $order->withQuote == true ? 'Quotation' : '' }} Importation Cost:</label>
 					{{ number_format($order->price, 2) }} &nbsp&nbsp {{ date_format(date_create($order->price_date), 'M, d Y H:i') }}
+					@endif
+					@if($order->delivery_price != null)
+					<br><label>Delivery Price: </label> {{  number_format($order->delivery_price, 2) }}
+					<br><label>Delivery Address: </label> {{  $order->delivery_address }}
 					@endif
 					@if(request()->user()->isAdmin())
 						@if($order->boxes_received != null)
-						<br><label>Boxes Received:</label>
+						<br><label>Total Boxes CBM Received:</label>
 							{{ $order->boxes_received }}
 						@endif
 					@endif
@@ -233,11 +271,42 @@
 		    <div style="height:30px;"></div>
 		    </div>
 		    @endforeach
-
             </div>
             <!-- /.box-body -->
           </div> <!-- box-end -->
           @endif
+
+       @if(request()->user()->isCustomer() && $order->status == 61)
+       <div class="box box-solid">
+		<div class="box-body">
+			<div class="row">
+				<div class="container-fluid  text-center">
+					<h2>Packaging Approval</h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					The cargo shown on the picture must:
+					<ul>
+						<li>The products are adequately packaged to withstand freight and handling. </li>
+						<li>The shipping mark attached to each master carton or crate</li>
+						<li>The outside of boxes bear no other marking than the shipping mark. There should be no indication of what the contents are to help avoid scrutiny during random inspections or theft.</li>
+					</ul>
+					By clicking Approve Packaging below, You acknowledges that:
+					<ol>
+						<li>All conditions above are met</li>
+						<li>We are not responsible for missing or damaged items due to inadequate packaging, or the opening of boxes during random inspections which only occur very rarely. <a style="cursor: pointer;" id="showAdditionalInfo"> Click here to learn more.</a></li>
+						<p class="hidden" id="learn_more">Random inspections only occur very rarely (less than 1% of the time) and very often only because the exterior of the boxes bear marking (on the box itself or other stickers attached) that attract the scrutiny of inspectors. Remember: unless your cargo is inspected, no one else knows the contents of your cargo apart from us, you and your supplier. </p>
+					</ol>
+				</div>
+			</div>
+			<br>
+			<a href="#" class="confirmation pull-right btn btn-primary"  data-title="Are you sure to approve packaging of this shipment?" data-text=""  data-href="{{ action('OrderController@ApprovePackage', $order->id) }}"><i class="fa fa-check"></i> Approve Packaging</a>
+
+			<a href="#" class="confirmation pull-right btn btn-danger" style="margin-right:10px" data-title="Are you sure to disapprove packaging of this shipment?" data-text=""  data-href="{{ action('OrderController@DisapprovePackage', $order->id) }}"><i class="fa fa-ban"></i> Disapprove Packaging</a>
+		</div>
+	</div> <!--box end-->
+       @endif
 
 
 
@@ -256,12 +325,35 @@
           </div> <!-- box-end -->
           @endif
 
+          @if($order->delivery_receipt != null)
+       <div class="box box-solid">
+		<div class="container-fluid">
+    			<h3>Delivery Proof:</h3>
+    		</div>
+		<div class="box-body">
+		    <div class="col-sm-4">
+		<a target="_blank" href="{{ $order->get_delivery_receipt_url() }}"><img src="{{ $order->get_delivery_receipt_url() }}" width="100%"></a>
+		    <div style="height:30px;"></div>
+		    </div>
+            </div>
+            <!-- /.box-body -->
+          </div> <!-- box-end -->
+          @endif
+
+          
+
     </section>
 @endsection
 
 @section('javascript')
 <!-- update sr number on load -->
 <script type="text/javascript">
+
+	$('#showAdditionalInfo').click(function(){
+		$('#learn_more').removeClass("hidden");
+	});
+
+
 	function update_table_sr_number(){
     var sr_number = 1;
     $('table#orders_table tbody').find('.sr_number').each( function(){

@@ -39,7 +39,12 @@ Route::resource('source', 'SourceController')->middleware('admin');
 
 Route::get('orders/addQuotation/no-login/{token}', 'OrderController@addQuotation')->name('addQuotationNoLogin');
 
+
+
 Route::get('orders/cancel/{order}', 'OrderController@cancel');
+Route::get('orders/cancelForm/{order}', 'OrderController@cancelForm')->middleware('admin');
+Route::put('orders/cancelSubmit/{order}', 'OrderController@cancelSubmit')->middleware('admin');
+
 
 Route::get('orders/addDimension/{order}', 'OrderController@editDimension')->middleware('supplier');
 Route::put('orders/addDimension/{order}', 'OrderController@updateDimension')->middleware('supplier');
@@ -51,7 +56,11 @@ Route::put('orders/addQuotationStore/{order}', 'OrderController@addQuotationStor
 Route::get('absorb/token/{token}', 'OrderController@ConsumeToken');
 
 Route::get('orders/forQuotation/{order}', 'OrderController@forQuotation')->middleware('supplier');
+
+
 Route::get('orders/acceptFee/{order}', 'OrderController@acceptFee')->middleware('customer');
+Route::get('orders/ApprovePackage/{order}', 'OrderController@ApprovePackage')->middleware('customer');
+Route::get('orders/DisapprovePackage/{order}', 'OrderController@DisapprovePackage')->middleware('customer');
 
 Route::get('orders/showMark/{order}', 'OrderController@showMark')->middleware('supplier');
 Route::get('orders/viewQuotation/{order}', 'OrderController@viewQuotation')->middleware('auth');
@@ -75,6 +84,16 @@ Route::put('orders/storeProofOfShipment/{order}', 'OrderController@storeProofOfS
 
 Route::get('orders/editDue/{order}', 'OrderController@editDue')->middleware('admin');
 Route::put('orders/updateDue/{order}', 'OrderController@updateDue')->middleware('admin');
+
+Route::get('orders/editDeliveryAddress/{order}', 'OrderController@editDeliveryAddress')->middleware('customer');
+Route::put('orders/updateDeliveryAddress/{order}', 'OrderController@updateDeliveryAddress')->middleware('customer');
+
+Route::get('orders/deliverForm/{order}', 'OrderController@deliverForm')->middleware('admin');
+Route::put('orders/deliverSubmit/{order}', 'OrderController@deliverSubmit')->middleware('admin');
+
+
+
+
 
 
 Route::put('orders/updateBoxes/{order}', 'OrderController@updateBoxes');

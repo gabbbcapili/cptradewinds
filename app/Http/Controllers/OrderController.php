@@ -404,14 +404,45 @@ class OrderController extends Controller
         $image = $request->file('shipment_proof');
         $new_name = uniqid() . '.' . $image->getClientOriginalExtension();
         $image->move(public_path('images') , $new_name);
-        $order->update(['shipment_proof' => $new_name, 'status' => 8]);
+        $order->update(['shipment_proof' => $new_name, 'status' => 8, 'shipped_at' => \Carbon::now()]);
+        $order->shippedSMS();
         $request->session()->flash('status', 'Successfully uploaded proof of shipment! Status is now processing.');
         OrderLogs::create(['order_id' => $order->id, 'description' => $request->user()->name . ' uploaded proof of shipment.']);
         return response()->json(['success' => 'The order status should be pending!', 'redirect' => action('OrderController@show', [$order->id])]);
     }
 
+
+     public function editDeliveryAddress(Order $order){
+        if($order->status != 9){
+              return response()->json(['status' => 'Unauthorized, invalid status.']);
+        }
+        return view('order.editDeliveryAddress', compact('order'));
+    }
+
+
+    public function updateDeliveryAddress(Order $order, Request $request, Mailer $mailer){
+        if($order->status != 9){
+              return response()->json(['status' => 'Unauthorized, invalid status.']);
+        }
+        $validator = Validator::make($request->all(),[
+            'delivery_address' => 'required',
+        ],
+            [
+                'delivery_address.required' => 'This field is required.',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()]);
+            }
+        $data = $request->only(['delivery_address']);
+        $data['status'] = 10;
+        $order->update($data);
+        $request->session()->flash('status', 'Successfully updated delivery address! Waiting for admin due amount.');
+        OrderLogs::create(['order_id' => $order->id, 'description' => $request->user()->name . ' updated delivery address.']);
+        return response()->json(['success' => 'success']);
+    }
+
     public function editDue(Order $order){
-        if($order->status != 8){
+        if($order->status != 10){
               return response()->json(['status' => 'Unauthorized, invalid status.']);
         }
         return view('order.editDue', compact('order'));
@@ -419,32 +450,44 @@ class OrderController extends Controller
 
 
     public function updateDue(Order $order, Request $request, Mailer $mailer){
-        if($order->status != 8){
+        if($order->status != 10){
               return response()->json(['status' => 'Unauthorized, invalid status.']);
         }
         $validator = Validator::make($request->all(),[
-            'boxes_received' => 'required|integer',
+            'cbm' => 'required|regex:/^\d*(\.\d{1,2})?$/',
             'price' => 'required',
+            'delivery_price' => 'nullable',
             'pickup_location' => 'required',
         ],
             [
                 'price.required' => 'This field is required.',
+                // 'price.integer' => 'This field contains an invalid format.',
+                // 'delivery_price.required' => 'This field is required.',
+                // 'delivery_price.integer' => 'This field contains an invalid format.',
                 'pickup_location.required' => 'This field is required.',
-                'boxes_received.required' => 'This field is required.',
-                'price' => 'This field should be an integer.'
+                'cbm.required' => 'This field is required.',
+                'cbm.regex' => 'This field contains an invalid format.',
+               
         ]);
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()]);
             }
-        $data = $request->only(['boxes_received','pickup_location']);
+        $data = $request->only(['pickup_location']);
+        $data['boxes_received'] = $request->input('cbm');
         $data['price'] = str_replace( ',', '', $request->input('price'));
+        $data['delivery_price'] = str_replace( ',', '', $request->input('delivery_price'));
         $data['price_date'] = \Carbon::now();
-        $data['status'] = 11;
-        $order->update($data);
-        $request->session()->flash('status', 'Successfully updated! Waiting for customer payment.');
-        $mailer->to($order->ordered_by->email)->send(new Payment($order));
 
-        $order->clearedSMS(new Client());
+        // $data['status'] = 11;
+        $order->update($data);
+        if($order->price < 1 || $order->delivery_price < 1){
+            $mailer->to(env('ADMIN1'))->send(new DynamicEmail($order, 'Input Delivery Price' , 'mails.order.deliveryPrice'));
+        }else{
+            $mailer->to($order->ordered_by->email)->send(new Payment($order));
+            $order->clearedSMS(new Client());
+            $order->update(['status' => 11]);
+        }
+        $request->session()->flash('status', 'Successfully updated! Waiting for customer payment.');
         OrderLogs::create(['order_id' => $order->id, 'description' => $request->user()->name . ' uploaded proof of shipment.']);
         return response()->json(['success' => 'The order status should be pending!']);
     }
@@ -471,7 +514,11 @@ class OrderController extends Controller
               return response()->json(['status' => 'Unauthorized, invalid status.']);
         }
 
-        $validator = Validator::make($request->all(),['payment' => 'required|mimes:jpeg,bmp,png'],
+        $validator = Validator::make($request->all(),[
+            'payment' => 'required|mimes:jpeg,bmp,png',
+            'pickup_person' => 'required_if:pickup_type,==,pickup',
+            'pickup_time' => 'required_if:pickup_type,==,pickup',
+        ],
             ['payment.mimes' => 'Only jpeg and png is allowed.']
         );
 
@@ -481,7 +528,7 @@ class OrderController extends Controller
         $image = $request->file('payment');
         $new_name = sha1(time()) . '.' . $image->getClientOriginalExtension();
         $image->move(public_path('images') , $new_name);
-        $order->update(['payment' => $new_name, 'status' => 12]);
+        $order->update(['payment' => $new_name, 'pickup_type' => $request->input('pickup_type'), 'pickup_person' => $request->input('pickup_person'),'pickup_time' => $request->input('pickup_time') , 'status' => 12]);
         $request->session()->flash('status', 'Successfully uploaded payment!');
         $mailTitle = 'Proof of payment for Shipment ' . $order->shipment_id;
         $mailer->to(env('ADMIN2b'))->send(new DynamicEmail($order, $mailTitle , 'mails.order.RemindAdmind2'));
@@ -498,7 +545,10 @@ class OrderController extends Controller
         $order->update(['status' => 13]);
 
         OrderLogs::create(['order_id' => $order->id, 'description' => 'Admin approved the payment. Shipment is ready for pick up']);
-        $mailer->to($order->ordered_by->email)->send(new Pickup($order));
+        if($order->pickup_type == 'pickup'){
+            $mailer->to($order->ordered_by->email)->send(new Pickup($order));
+        }
+        
         $mailTitle= 'Shipment ' . $order->shipment_id . ' has arrived.';
         $mailer->to($order->supplier_by->email)->send(new DynamicEmail($order, $mailTitle , 'mails.order.ShipmentArrived'));
         $order->paymentConfirmedSMS(new Client());
@@ -620,7 +670,7 @@ class OrderController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()]);
             }
-        $count_orders = $order->details->count();
+        
         $updated_detail_ids = [];
         if ($validator->passes()){
             $details = $request->input(['product']);
@@ -642,8 +692,10 @@ class OrderController extends Controller
                  $order->details()->saveMany($newOrders);
              }
          }
+         $order = Order::find($order->id);
          $order->UpdateTotalCBM();
          $order->UpdateTotalWeight();
+         $count_orders = $order->details->count();
         request()->session()->flash('status', 'Successfully Updated an Shipment! Please wait for admin approval.');
 
         $status = $order->withQuote == false ? 6 : 4;
@@ -651,7 +703,6 @@ class OrderController extends Controller
             $status = 3;
         }
         $order->update(['status' => $status, 'price' => null]);
-        $order->update(['price'=> null]);
         if($order->withQuote == true){
             $mailer->to(env('ADMIN1'))->send(new AdminRemindMail(route('addQuotationNoLogin', ['token' => $order->token])));
         }
@@ -723,8 +774,37 @@ class OrderController extends Controller
         
     }
 
+    public function cancelForm(Order $order){
+        return view('order.cancel', compact('order'));
+    }
+
+    public function cancelSubmit(Order $order, Request $request, Mailer $mailer){
+        if ($order->user_id != $request->user()->id && ! $request->user()->isAdmin() && $order->supplier_id != $request->user()->id){
+            return response()->json(['error' => 'Unauthorized']);
+        }
+        // pending
+        if ($order->status >= 1 && $order->status >= 8){
+            return response()->json(['error' => 'Only pending request can be cancelled!']);
+        }
+        $validator = Validator::make($request->all(), ['notes' => 'required']);
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()]);
+        }
+        $data = $request->only(['notes']);
+        $data['status'] = 2;
+        $order->update($data);
+        OrderLogs::create(['order_id' => $order->id, 'description' => $request->user()->name . ' cancelled the transaction.']);
+        if($order->ordered_by != null){
+            $mailer->to($order->ordered_by->email)->send(new DynamicEmail(['order' => $order], 'Shipment: '. $order->shipment_id . ' was Cancelled' , 'mails.order.CancelledByAdmin'));
+       }
+        $request->session()->flash('status', 'Successfully cancelled the transaction.');
+        return response()->json(['success' => 'success']);
+    }
+
+
+
     public function cancel(Order $order, Request $request, Mailer $mailer){
-         if ($order->user_id != $request->user()->id && ! $request->user()->isAdmin() && $order->supplier_id != $request->user()->id){
+        if ($order->user_id != $request->user()->id && ! $request->user()->isAdmin() && $order->supplier_id != $request->user()->id){
             return response()->json(['error' => 'Unauthorized']);
         }
         // pending
@@ -732,14 +812,14 @@ class OrderController extends Controller
             return response()->json(['error' => 'Only pending request can be cancelled!']);
         }
 
-        OrderLogs::create(['order_id' => $order->id, 'description' => $request->user()->name . ' cancelled the transaction.']);
+    OrderLogs::create(['order_id' => $order->id, 'description' => $request->user()->name . ' cancelled the transaction.']);
        $order->update(['status' => 2]);
        if($order->ordered_by != null){
             $mailer->to($order->ordered_by->email)->send(new DynamicEmail(['order' => $order], 'Shipment: '. $order->shipment_id . ' was Cancelled' , 'mails.order.CancelledByAdmin'));
        }
        request()->session()->flash('success' , 'Successfully Cancelled Shipment.');
 
-        return response()->json(['success' => 'Successfully canceled!']);
+    return response()->json(['success' => 'Successfully canceled!']);
 
      }
 
@@ -856,17 +936,16 @@ class OrderController extends Controller
             $boxes[] = $new_name;
         }
         $boxes = implode('#', $boxes);
-        $order->update(['status' => 7, 'boxes' => $boxes]);
+        $order->update(['status' => 61, 'boxes' => $boxes]);
 
         $mailTitle = 'Pictures of Shipment ' . $order->shipment_id;
 
         $mailer->to($order->ordered_by->email)->send(new DynamicEmail(['order' => $order], $mailTitle , 'mails.order.UploadedPictures'));
-        $mailer->to($order->supplier_by->email)->send(new ReadyToShip($order));
 
         OrderLogs::create(['order_id' => $order->id, 'description' => $request->user()->name . ' added photos Boxes pictures.']);
-        $request->session()->flash('status', 'Successfully added invoice and box(es) image(s)!');
-        $request->session()->flash('status', 'Next Step: Ship to our warehouse. Please check your email for shipping instructions.');
-        return response()->json(['success' => 'success']);
+        $request->session()->flash('status', 'Next Step: Please wait for customers approval of the package.');
+        // $request->session()->flash('status', 'Next Step: Ship to our warehouse. Please check your email for shipping instructions.');
+        return response()->json(['success' => 'success', 'redirect' => action('OrderController@show', [$order->id])]);
      }
 
      public function acceptInvoice(Order $order, Request $request, Mailer $mailer){
@@ -908,11 +987,11 @@ class OrderController extends Controller
      }
 
      public function phArrived(Order $order, Request $request, Mailer $mailer){
-        if ($order->status != 10){
+        if ($order->status != 8){
             return response()->json(['error' => 'Unauthorized, invalid status!']);
         }
         $request->session()->flash('status', 'Success! status updated / payment email sent to customer.');
-        $order->update(['status' => 11]);
+        $order->update(['status' => 9]);
 
         OrderLogs::create(['order_id' => $order->id, 'description' => 'Shipment arrived at customs.']);
 
@@ -921,15 +1000,71 @@ class OrderController extends Controller
         return response()->json(['success' => 'success']);
      }
 
-     public function completeTransaction(Order $order, Request $request){
+     public function completeTransaction(Order $order, Request $request, Mailer $mailer){
         if ($order->status != 13){
             return response()->json(['error' => 'Unauthorized, invalid status!']);
         }
         $request->session()->flash('status', 'Successfully completed a transaction!');
-        $order->update(['status' => 14]);
+        $order->update(['status' => 15]);
         OrderLogs::create(['order_id' => $order->id, 'description' => 'Transaction complete.']);
+        $mailer->to($order->supplier_by->email)->send(new DynamicEmail($order, 'Shipment Successfully Delivered : ' . $order->shipment_id , 'mails.order.orderCompleted(supplier)'));
         $order->completeSMS(new Client());
         return response()->json(['success' => 'success']);
+     }
+
+     public function ApprovePackage(Order $order, Mailer $mailer){
+        if ($order->status != 61){
+            return response()->json(['error' => 'Unauthorized, invalid status!']);
+        }
+        $order->update(['status' => 7]);
+        $mailer->to($order->supplier_by->email)->send(new ReadyToShip($order));
+        request()->session()->flash('success' , 'Successfully Approved Package.');
+        return response()->json(['success' => 'Successfully Approved Package!']);   
+     }
+
+     public function DisapprovePackage(Order $order, Mailer $mailer){
+        if ($order->status != 61){
+            return response()->json(['error' => 'Unauthorized, invalid status!']);
+        }
+        $order->update(['status' => 6]);
+        $mailTitle= 'Shipment ' . $order->shipment_id . ' : Customer Disapproved Package.';
+        $mailer->to($order->supplier_by->email)->send(new DynamicEmail($order, $mailTitle , 'mails.order.DisapprovedPackage'));
+        request()->session()->flash('success' , 'Successfully Disapprove Package.');
+        return response()->json(['success' => 'Successfully Disapprove Package!']);
+     }
+
+     public function deliverForm(Order $order){
+        if ($order->status != 13){
+            abort(401);
+        }
+        return view('order.deliverForm', compact('order'));
+     }
+
+     public function deliverSubmit(Order $order, Mailer $mailer, Request $request){
+        if($order->status != 13){
+              return response()->json(['status' => 'Unauthorized, invalid status.']);
+        }
+
+        $validator = Validator::make($request->all(),[
+            'delivery_receipt' => 'required|mimes:jpeg,bmp,png',
+            'deliver_company_name' => 'required',
+        ],
+            ['delivery_receipt.mimes' => 'Only jpeg and png is allowed.']
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()]);
+            }
+        $image = $request->file('delivery_receipt');
+        $new_name = sha1(time()) . '.' . $image->getClientOriginalExtension();
+        $image->move(public_path('images/delivery_receipt') , $new_name);
+        $order->update(['delivery_receipt' => $new_name, 'deliver_company_name' => $request->input('deliver_company_name') , 'status' => 15]);
+        $request->session()->flash('status', 'Successfully uploaded delivery receipt!');
+        $mailer->to($order->supplier_by->email)->send(new DynamicEmail($order, 'Shipment Successfully Delivered : ' . $order->shipment_id , 'mails.order.orderCompleted(supplier)'));
+        $order->completeSMS(new Client());
+
+        // OrderLogs::create(['order_id' => $order->id, 'description' => $request->user()->name . ' added delivery receipt.']);
+        return response()->json(['success' => 'success', 'redirect' => action('OrderController@show' , [$order->id])]);
      }
 
 }

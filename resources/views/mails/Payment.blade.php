@@ -7,6 +7,11 @@
 
 Hello, <br><br>
 
+Importation Cost: {{ $order->price }}<br>
+Delivery Price to {{ $order->delivery_address }}: {{ $order->delivery_price }}<br>
+
+Sir David: Please revise email tempalate below:<br>
+
 Here are the instructions for having us finance 50% of your order. Please make sure the steps are followed in order.
 	<ol>
 		<li>

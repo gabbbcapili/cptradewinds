@@ -18,6 +18,9 @@
 			        <ol>
 			          <li>PLEASE PRINT AND ATTACH THIS MARK <u>ON ALL</u> BOXES BEFORE SHIPPING</li>
 			          <li>PLEASE MAKE SURE THE MARK IS SECURELY ATTACHED TO EACH BOX. <u> APPLY CLEAR TAPE IF POSSIBLE FOR ADDED PROTECTION</u></li>
+			          <li>The products are adequately packaged to withstand freight and handling. </li>
+			          <li>The shipping mark attached to each master carton or crate</li>
+			          <li>The outside of boxes bear no other marking than the shipping mark. There should be no indication of what the contents are to help avoid scrutiny during random inspections or theft.</li>
 			        </ol>
 			      </font>
 				</div>

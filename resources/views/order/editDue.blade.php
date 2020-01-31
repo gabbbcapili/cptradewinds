@@ -9,18 +9,69 @@
 	    </h4>
 	</div>
 		<div class="modal-body" >
-		 <div class="row invoice-info">
+			<div class="row invoice-info">
+				<div class="col-sm-12 invoice-col">
+					<div class="form-group">
+						<label>Customer's Delivery Address</label>
+						<textarea class="form-control" disabled>{{ $order->delivery_address }}</textarea>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<div class="row invoice-info">
+				<div class="col-sm-12 invoice-col">
+					<div class="form-group">
+						<h4><b>Received Measurements:</b></h4>
+					</div>
+				</div>
+			</div>
+			<div class="row invoice-info">
+				<div class="col-sm-4 invoice-col">
+					<div class="form-group">
+						<label>Total Length:*</label>
+						<input type="number" name="length" id="length" class="form-control cbm">
+					</div>
+				</div>
+				<div class="col-sm-4 invoice-col">
+					<div class="form-group">
+						<label>Total Width:*</label>
+						<input type="number" name="width" id="width" class="form-control cbm">
+					</div>
+				</div>
+				<div class="col-sm-4 invoice-col">
+					<div class="form-group">
+						<label>Total Height:*</label>
+						<input type="number" name="height" id="height" class="form-control cbm">
+					</div>
+				</div>
+			</div>
+			<div class="row invoice-info">
+				<div class="col-sm-4 invoice-col">
+					<div class="form-group">
+						<label>Total CBM</label>
+						<input type="text" name="cbm" id="cbm" class="form-control" readonly value="{{ $order->boxes_received }}">
+					</div>
+				</div>
+			</div>
+
+			<hr>
+		  <div class="row invoice-info">
+				<div class="col-sm-12 invoice-col">
+					<div class="form-group">
+						<h4><b>Pick-up Rate:</b></h4>
+					</div>
+				</div>
+			</div>
+			<div class="row invoice-info">
 		    <div class="col-sm-12 invoice-col">
 		      <div class="form-group">
 		      	<div class="col-sm-4">
-		      		<label for="boxes_received">Number of Boxes Received:</label>
-		    	  	<input type="number" name="boxes_received" id="boxes_received">		  
 		      	</div>    		
 		      </div>
 		      <div class="form-group">
 		      	<div class="col-sm-4">
-		      		<label for="price">Due Amount:</label>
-		      		<input type="text" value="{{ $order->price ? number_format($order->price, 2) : '00.00' }}" name="price" id="price">		  
+		      		<label for="price">Importation Cost:</label>
+		      		<input type="text" class="form-control" value="{{ $order->price ? number_format($order->price, 2) : '00.00' }}" name="price" id="price">		  
 		      	</div>    		
 		      </div>
 		      <div class="form-group">
@@ -34,6 +85,22 @@
 		      </div>
 		    </div>
 		  </div>
+			<hr>
+			<div class="row invoice-info">
+				<div class="col-sm-12 invoice-col">
+					<div class="form-group">
+						<h4><b>Delivery Rate:</b></h4>
+					</div>
+				</div>
+			</div>
+			<div class="row invoice-info">
+				<div class="form-group">
+					<div class="col-sm-4 invoice-col">
+						<label>Local Transportation Fee:</label>
+						<input type="text" name="delivery_price" id="delivery_price" class="form-control" value="{{ $order->delivery_price ? number_format($order->delivery_price, 2) : '00.00' }}">
+					</div>
+				</div>
+			</div>
 		</div>
     <div class="modal-footer">
       <button class="btn btn-primary no-print" type="submit" class="btn_save"><i class="fa fa-save"></i> Save
@@ -47,11 +114,21 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('.view_modal').on('shown.bs.modal', function() {
-	    	$('#boxes_received').focus()
+	    	$('#length').focus();
 	    	// #price
 	    	$('#price').mask('000,000,000,000,000.00', {reverse: true});
+	    	$('#delivery_price').mask('000,000,000,000,000.00', {reverse: true});
+
 	 	});
 		
+		$('.cbm').change(function(){
+
+			var total = 0;
+			total = parseFloat($('#length').val()) + parseFloat($('#width').val()) + parseFloat($('#height').val());
+			total = (total / 139).toFixed(2);
+			$('input[name=cbm]').val(total);
+		});
+
 	});
 	$("#updateDue").submit(function(e) {
 		e.preventDefault();
