@@ -1054,7 +1054,7 @@ class OrderController extends Controller
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()]);
-            }
+        }
         $image = $request->file('delivery_receipt');
         $new_name = sha1(time()) . '.' . $image->getClientOriginalExtension();
         $image->move(public_path('images/delivery_receipt') , $new_name);
@@ -1066,5 +1066,26 @@ class OrderController extends Controller
         // OrderLogs::create(['order_id' => $order->id, 'description' => $request->user()->name . ' added delivery receipt.']);
         return response()->json(['success' => 'success', 'redirect' => action('OrderController@show' , [$order->id])]);
      }
+    
+    public function paySupplier(Order $order){
+        return view('order.paySupplier', compact('order'));
+    }
 
+    public function paySupplierStore(Order $order, Request $request, Mailer $mailer){
+        $validator = Validator::make($request->all(),[
+            'supplier_payment' => 'required|mimes:jpeg,bmp,png',
+        ],
+            ['supplier_payment.mimes' => 'Only jpeg and png is allowed.']
+        );
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()]);
+        }
+        $image = $request->file('supplier_payment');
+        $new_name = sha1(time()) . '.' . $image->getClientOriginalExtension();
+        $image->move(public_path('images/supplier_payment') , $new_name);
+        $order->update(['supplier_payment' => $new_name, 'status' => 3, 'withQuote' => false]);
+        $mailer->to($order->supplier_by->email)->send(new DynamicEmail($order, 'Customer payment details', 'mails.order.CustomerPayment'));
+        $request->session()->flash('status', 'Successfully added payment.');
+        return response()->json(['success' => 'success']);
+    }
 }

@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\OrderDetails;
+use App\Payment;
 use App\OrderKey;
 use App\OrderItems;
 use GuzzleHttp\Client;
@@ -15,10 +16,14 @@ class Order extends Model
     //
      protected $table = 'orderhh';
 
-     protected $fillable = ['supplier', 'email', 'user_id', 'supplier_id', 'status', 'import_details', 'location', 'cbm', 'weight', 'price', 'price_date' , 'warehouse', 'payment', 'payment_date' , 'quoteFor', 'boxes', 'pickup_location', 'withQuote', 'shipment_id', 'invoice_no', 'shipment_proof','boxes_received', 'source_id', 'token', 'shipped_at', 'delivery_address', 'delivery_price', 'pickup_type', 'extra_charges','delivery_receipt', 'deliver_company_name', 'pickup_person', 'pickup_time', 'notes'];
+     protected $fillable = ['supplier', 'email', 'user_id', 'supplier_id', 'status', 'import_details', 'location', 'cbm', 'weight', 'price', 'price_date' , 'warehouse', 'payment', 'payment_date' , 'quoteFor', 'boxes', 'pickup_location', 'withQuote', 'shipment_id', 'invoice_no', 'shipment_proof','boxes_received', 'source_id', 'token', 'shipped_at', 'delivery_address', 'delivery_price', 'pickup_type', 'extra_charges','delivery_receipt', 'deliver_company_name', 'pickup_person', 'pickup_time', 'notes', 'supplier_payment'];
 
      public function details(){
      	return $this->hasMany(OrderDetails::class, 'order_id', 'id')->whereNull('type');
+     }
+
+     public function payments(){
+      return $this->hasMany(Payment::class, 'order_id', 'id');
      }
 
      public function items(){
@@ -134,6 +139,12 @@ class Order extends Model
       public function get_delivery_receipt_url(){
          return url('/images/delivery_receipt/' . $this->delivery_receipt);
       }
+
+      public function get_supplier_payment_url(){
+         return url('/images/supplier_payment/' . $this->supplier_payment);
+      }
+
+      
 
       public function getQuoteForDisplay(){
           if ($this->quoteFor == 1){

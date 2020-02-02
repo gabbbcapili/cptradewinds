@@ -76,7 +76,12 @@
 				</div>
 				<div class="col-sm-4">
 						<label for="order_id">Order Reference No.:</label>
-						<input type="text" class="form-control" name="order_id" id="order_id">
+						<select class="form-control select2" name="order_id" id="order_id">
+							<option disabled hidden selected></option>
+							@foreach($orders as $order)
+								<option value="{{ $order->id }}">{{ $order->shipment_id }}</option>
+							@endforeach
+						</select>
 					</div>
 			</div>
 			<br>

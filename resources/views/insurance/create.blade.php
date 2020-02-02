@@ -1,4 +1,4 @@
-@extends('layouts.base')
+	@extends('layouts.base')
 @section('title', 'Create Insurance Service')
 @section('content')
    <!-- Content Header (Page header) -->

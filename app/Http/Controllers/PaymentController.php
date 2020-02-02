@@ -12,6 +12,7 @@ use App\Mail\PaymentTokenMail;
 use Illuminate\Mail\Mailer;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use App\Mail\DynamicEmail;
 
 //mails
 use App\Mail\BankDetails;
@@ -60,13 +61,14 @@ class PaymentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
       if (Payment::isTimeFrameAllowed() == false){
           return response()->json(['status' => Payment::getCutOffString()]);
         }
         $dollar = Dollar::first();
-        return view('payment.create', compact('dollar'));
+        $orders = $request->user()->customerOrders;
+        return view('payment.create', compact('dollar', 'orders'));
     }
 
     /**
@@ -86,6 +88,7 @@ class PaymentController extends Controller
       }
         $paymentValidation = $this->ValidatorUtil->paymentValidation();
         $paymentValidation['invoice'] = 'required|image';
+        $paymentValidation['order_id'] = 'required';
         $validator = Validator::make($request->all(), $paymentValidation, $this->ValidatorUtil->paymentValidationMessages());
         if ($validator->fails()) {
         return response()->json(['error' => $validator->errors()]);
@@ -208,7 +211,8 @@ class PaymentController extends Controller
               return back()->with(['status' => "Unauthorized, not allowed.", 'alert-class' => 'error']);
         }
         $dollar = Dollar::first();
-        return view('payment.addSupplierDetails', compact('payment', 'dollar'));    
+        $orders = $request->user()->customerOrders;
+        return view('payment.addSupplierDetails', compact('payment', 'dollar', 'orders'));    
     }
 
     public function storeSupplierDetails(Payment $payment, Request $request, Mailer $mailer){

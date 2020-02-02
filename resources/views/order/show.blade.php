@@ -126,6 +126,37 @@
 			</div>
 		</div> <!--box end-->
 
+@php
+$payment = $order->payments->where('status', 7)->first();
+@endphp
+		@if($payment)
+   <div class="box box-solid">
+	<div class="box-body">
+		<div class="row">
+			<div class="container-fluid text-center">
+				<h2>Payments: <i class="fa fa-check fa-lg green"></i></h2>
+				<h3>Total Amount: {{ number_format($payment->total_amount(), 2) }} <a href="#" class="modal_button btn" data-href="{{ action('PaymentController@show', [$payment->id] ) }}"><i class="fa fa-eye"></i> View details here</a></h3>
+			</div>
+		</div>	
+        </div>
+        <!-- /.box-body -->
+      </div> <!-- box-end -->
+@endif
+
+@if($order->supplier_payment != null)
+   <div class="box box-solid">
+	<div class="box-body">
+		<div class="row">
+			<div class="container-fluid text-center">
+				<h2>Payments: <i class="fa fa-check fa-lg green"></i></h2>
+				<h3><a href="{{ $order->get_supplier_payment_url() }}" target="_blank" class="btn"><i class="fa fa-eye"></i> View details here</a></h3>
+			</div>
+		</div>	
+        </div>
+        <!-- /.box-body -->
+      </div> <!-- box-end -->
+@endif
+
 @if($order->items->count() != 0)
 <div class="box box-solid">
 	<div class="box-body">

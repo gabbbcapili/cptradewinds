@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('mail:paymentrate')->dailyAt('9:00');
         $schedule->command('order:automatedsms')->dailyAt('9:00');
         $schedule->command('order:chargeFreeStorage')->dailyAt('9:00');
+        $schedule->command('order:payments')->everyMinute();
     }
 
     /**

@@ -53,6 +53,11 @@ Route::get('orders/approve/{order}', 'OrderController@approve')->middleware('sup
 Route::get('orders/addQuotation/{order}', 'OrderController@addQuotation')->middleware('admin');
 Route::put('orders/addQuotationStore/{order}', 'OrderController@addQuotationStore');
 
+
+Route::get('orders/paySupplier/{order}', 'OrderController@paySupplier')->middleware('customer');
+Route::put('orders/paySupplierStore/{order}', 'OrderController@paySupplierStore')->middleware('customer');
+
+
 Route::get('absorb/token/{token}', 'OrderController@ConsumeToken');
 
 Route::get('orders/forQuotation/{order}', 'OrderController@forQuotation')->middleware('supplier');

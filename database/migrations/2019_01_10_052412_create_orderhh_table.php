@@ -58,6 +58,7 @@ class CreateOrderhhTable extends Migration
             $table->string('pickup_person')->nullable();
             $table->string('pickup_time')->nullable();
             $table->string('notes')->nullable();
+            $table->string('supplier_payment')->nullable();
             $table->timestamps();
         });
         DB::update("ALTER TABLE orderhh AUTO_INCREMENT = 10000;");

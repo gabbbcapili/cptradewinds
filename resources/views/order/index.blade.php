@@ -63,6 +63,14 @@
                              Continue/Cancel Shipment
                            </a>
                             @endif
+                            @if(($order->status == 3) && auth()->user()->isSupplier() && $order->withQuote == true)
+                            <a href="{{ action('OrderController@edit', $order->id) }}" class="btn"><i class="glyphicon glyphicon-edit"></i>
+                             Edit Details
+                           </a>
+                            @endif
+                            @if(($order->status == 15) && auth()->user()->isCustomer() && $order->withQuote == true)
+                            <a href="#" class="btn choose_warehouse" data-href="{{ action('OrderController@paySupplier', $order->id) }}"><i class="fa fa-edit"></i> Pay Supplier</a>
+                            @endif
                             @if($order->status == 2 && (auth()->user()->isCustomer() || auth()->user()->isSupplier()) )
                               <a href="{{ action('OrderController@edit', $order->id) }}" class="btn"><i class="glyphicon glyphicon-edit"></i>
                                  Edit Details
