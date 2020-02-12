@@ -43,8 +43,13 @@ class Payment extends Model
         return url('/images/invoice/' . $this->invoice);
      }
 
-     public function getDepositUrl(){
-        return url('/images/deposit/' . $this->deposit);
+     public function deposits(){
+        return explode('#', $this->deposit);
+     }
+
+
+     public static function getDepositUrl($url){
+        return url('/images/deposit/' . $url);
      }
 
      public function getSSDeposit(){

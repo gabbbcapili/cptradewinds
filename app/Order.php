@@ -108,7 +108,12 @@ class Order extends Model
           }elseif ($this->status == 14){
                return 'Delivered / Picked up';
           }elseif ($this->status == 15){
-               return 'Completed';
+              if($this->withQuote == true){
+               return 'Qoute Completed';
+              }else{
+                return 'Completed';
+              }
+
           }
      }
 

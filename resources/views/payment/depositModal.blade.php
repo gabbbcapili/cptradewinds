@@ -15,7 +15,8 @@
 		      	<div class="col-sm-2"></div>
 		      	<div class="col-sm-8">
 		      	<label for="payment">Proof of Deposit Photo::</label>
-		      	<input type="file" name="deposit" id="deposit" class="form-control">
+		      	<input type="file" multiple name="deposits[]" id="deposits" class="form-control">
+		      	<small>While holding down the Ctrl key, click each of the other files you want to include.</small>
 		      	</div>		      		
 		      </div>
 		    </div>

@@ -36,8 +36,8 @@ class OrderDetails extends Model
 
       public static function get_type_select(){
         return [
-            "Palletized Cargo" => "Palletized Cargo",
-            "Carton Boxes" => "Carton Boxes",
+            "Pallet" => "Pallet",
+            "Box" => "Box",
             "Sacks" => "Sacks",
             "Drums" => "Drums",
             "Wooden Crates" => "Wooden Crates",

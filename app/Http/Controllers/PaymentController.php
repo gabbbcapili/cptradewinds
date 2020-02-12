@@ -293,18 +293,30 @@ class PaymentController extends Controller
         if($payment->user_id != request()->user()->id){
           return response()->json(['status' => 'Unauthorized, not allowed']);
         }
-        $validator = Validator::make($request->all(), ['deposit' => 'required|mimes:jpeg,bmp,png'],
-            ['deposit.mimes' => 'Only jpeg and png is allowed.']
+
+        $validator = Validator::make($request->all(), [
+            'deposits.*' => ['required', 'mimes:jpeg,bmp,png'],
+            'deposits' => 'required'
+        ],
+        [
+            'deposits.*.required' => 'This field is required',
+            'deposits.*.mimes' => 'Only jpeg,png is allowed.'
+        ]
         );
+
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()]);
             }
-        if($request->hasFile('deposit')){
-          $image = $request->file('deposit');
-          $new_name = sha1(time()) . '.' . $image->getClientOriginalExtension();
-          $image->move(public_path('images/deposit') , $new_name);
+
+        $deposits = array();
+        foreach($request->deposits as $deposit){
+            $new_name = uniqid() . '.' . $deposit->getClientOriginalExtension();
+            $deposit->move(public_path('images/deposit') , $new_name);
+            $deposits[] = $new_name;
         }
-        $payment->update(['deposit' => $new_name, 'status' => 6]);
+        $deposits = implode('#', $deposits);
+
+        $payment->update(['deposit' => $deposits, 'status' => 6]);
         $request->session()->flash('status', 'Successfully uploaded deposit!');
         
         return response()->json(['success' => 'success']);
@@ -317,7 +329,7 @@ class PaymentController extends Controller
       return view('payment.paymentConfirmModal', compact('payment'));
     }
 
-    public function storePaymentConfirm(Payment $payment, Request $request){
+    public function storePaymentConfirm(Payment $payment, Request $request, Mailer $mailer){
       if($payment->status != 6){
               return response()->json(['status' => 'Unauthorized, invalid status.']);
         }
@@ -326,12 +338,23 @@ class PaymentController extends Controller
         );
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()]);
-            }
+        }
         if($request->hasFile('ssDeposit')){
           $image = $request->file('ssDeposit');
           $new_name = sha1(time()) . '.' . $image->getClientOriginalExtension();
           $image->move(public_path('images/ssDeposit') , $new_name);
         }
+
+        if($payment->order){
+          $order = $payment->order;
+          if($order->status == 15 && $order->withQuote == true){
+            $order->update(['status' => 3, 'withQuote' => false]);
+            $mailer->to($order->supplier_by->email)->send(new DynamicEmail($order, 'Customer payment details', 'mails.order.CustomerPayment'));
+          }
+          
+        }
+
+
         $payment->update(['ssDeposit' => $new_name, 'status' => 7]);
         $request->session()->flash('status', 'Successfully confirmed payment!');
         return response()->json(['success' => 'success']);

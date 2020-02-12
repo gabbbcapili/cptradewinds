@@ -73,8 +73,10 @@
   <div class="row invoice-info no-print">
     <div class="col-sm-8 invoice-col">
       <div class="form-group pull-left">
-        <label>Proof of Deposit:</label>
-        <a target="_blank" href="{{ $payment->getDepositUrl() }}">View Deposit</a>
+        <label>Proof of Deposit:</label><br>
+        @foreach($payment->deposits() as $img)
+          <a target="_blank" href="{{ $payment->getDepositUrl($img) }}">View Deposit {{ $loop->iteration }}</a><br>
+        @endforeach
       </div>
     </div>
   </div>

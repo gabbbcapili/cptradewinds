@@ -10,6 +10,13 @@
 	</div>
 		<div class="modal-body" >
 		 <div class="row invoice-info">
+		 	<div class="col-sm-12 invoice-col">
+		 			<p>1.	You can pay your supplier using our payment services <a href="{{ action('PaymentController@create') }}?order_id={{ $order->id }}"> here</a></p>
+		 			<p>2.   If payment has been made between you and your supplier please upload proof of payment below:</p>
+		 	</div>
+		 </div>
+		 <br>	<br>	
+		 <div class="row invoice-info">
 		    <div class="col-sm-12 invoice-col">
 		      <div class="form-group">
 		      	<label for="warehouse">Supplier Payment:</label>

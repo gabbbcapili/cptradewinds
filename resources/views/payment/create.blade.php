@@ -79,7 +79,7 @@
 						<select class="form-control select2" name="order_id" id="order_id">
 							<option disabled hidden selected></option>
 							@foreach($orders as $order)
-								<option value="{{ $order->id }}">{{ $order->shipment_id }}</option>
+								<option value="{{ $order->id }}" {{ request()->input('order_id') == $order->id ? 'selected' : '' }}>{{ $order->shipment_id }}</option>
 							@endforeach
 						</select>
 					</div>

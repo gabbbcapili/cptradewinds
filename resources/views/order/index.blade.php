@@ -92,7 +92,7 @@
                      <!--        @if($order->status == 3 && auth()->user()->isSupplier())
                             <a href="#" class="confirmation btn" data-title="Are you sure to request quotation for this transaction" data-text="If yes, you will not be able undo this action!"  data-href="{{ action('OrderController@forQuotation', $order->id) }}"><i class="fa fa-cart-arrow-down"></i> Request Shipment Quotation</a>
                             @endif -->
-                            @if(($order->status == 4 || $order->status == 3) && auth()->user()->isAdmin())
+                            @if(($order->status == 4 || $order->status == 3) && auth()->user()->isAdmin() && $order->withQuoute == true)
                             <a class="btn" href="{{ action('OrderController@addQuotation', $order->id) }}"><i class="fa fa-plus"></i> Add Shipment Quotation</a>
                             @endif
                             @if(($order->status == 5 || $order->status == 4) && $order->price != null)

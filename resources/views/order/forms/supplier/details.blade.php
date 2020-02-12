@@ -82,7 +82,10 @@ $payment = $order->payments->where('status', 7)->first();
 		<div class="row">
 			<div class="container-fluid text-center">
 				<h2>Payments: <i class="fa fa-check fa-lg green"></i></h2>
-				<h3><a href="{{ $order->get_supplier_payment_url() }}" target="_blank" class="btn"><i class="fa fa-eye"></i> View details here</a></h3>
+				<div class="col-sm-4"></div>
+				<div class="col-sm-4">
+				<h3><a href="{{ $order->get_supplier_payment_url() }}" target="_blank" class="btn"><img src="{{ $order->get_supplier_payment_url() }}" width="100%"></a></h3>
+				</div>
 			</div>
 		</div>	
         </div>

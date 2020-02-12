@@ -25,6 +25,13 @@
 			      </font>
 				</div>
 			</div>
+			<div class="row center-div text-center">
+				<h2>Sample:</h2>
+				<div class="col-sm-4"></div>
+				<div class="col-sm-4">
+					<a target="_blank" href="/dist/img/shippingmark.png"><img src="/dist/img/shippingmark.png" width="100%"></a>
+				</div>
+			</div>
 			<br>
 			<div class="row center-div text-center">
 				<!-- <div class="col-sm-4"> -->

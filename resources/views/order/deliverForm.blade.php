@@ -10,12 +10,12 @@
 	</div>
 		<div class="modal-body" >
 		 <div class="row invoice-info">
-		    <div class="col-sm-4 invoice-col">
+	<!-- 	    <div class="col-sm-4 invoice-col">
 		      <div class="form-group">
 		      	<label for="warehouse"> Shipping Company:</label>
 		      	<input type="text" class="form-control" name="deliver_company_name">
 		      </div>
-		    </div>
+		    </div> -->
 		    <div class="col-sm-8 invoice-col">
 		      <div class="form-group">
 		      	<label for="warehouse"> Delivery Receipt:</label>

@@ -995,7 +995,7 @@ class OrderController extends Controller
 
         OrderLogs::create(['order_id' => $order->id, 'description' => 'Shipment arrived at customs.']);
 
-        $mailer->to($order->ordered_by->email)->send(new Payment($order));
+        // $mailer->to($order->ordered_by->email)->send(new Payment($order));
 
         return response()->json(['success' => 'success']);
      }
@@ -1047,7 +1047,6 @@ class OrderController extends Controller
 
         $validator = Validator::make($request->all(),[
             'delivery_receipt' => 'required|mimes:jpeg,bmp,png',
-            'deliver_company_name' => 'required',
         ],
             ['delivery_receipt.mimes' => 'Only jpeg and png is allowed.']
         );
