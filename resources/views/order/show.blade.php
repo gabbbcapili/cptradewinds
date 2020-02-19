@@ -115,9 +115,13 @@
 					<br><label style="font-size:20px">{{ $order->withQuote == false ? 'Shipment' : ''}} Status:</label>
 					<b>
 					{{ $order->get_status_display() }}
-					@if($order->withQuote == true && (auth()->user()->isCustomer() || auth()->user()->isSupplier() ))
+					@if(($order->status == 15) && auth()->user()->isCustomer() && $order->withQuote == true)
+                            <a href="#" class="btn modal_button" data-href="{{ action('OrderController@paySupplier', $order->id) }}"><i class="fa fa-edit"></i> Pay Supplier</a>
+                    @endif
+<!-- 					@if($order->withQuote == true && (auth()->user()->isCustomer() || auth()->user()->isSupplier() ))
 						<a href="{{ route('shipmentcreate') }}" style="margin-left:10px" class="btn btn-success">Start a Shipment</a>
-					@endif
+
+					@endif -->
 					</b>
 				</div>
 				

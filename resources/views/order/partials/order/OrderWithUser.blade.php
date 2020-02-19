@@ -40,7 +40,7 @@
 				<br>
 				<div class="row">
 					<div class="col-sm-4">	
-						<label for="invoice">Invoice/Reference Number:* </label>
+						<label for="invoice">Invoice/Reference Number: </label>
 						<input type="text" class="form-control" name="invoice_no" id="invoice_no">
 					</div>
 					<div class="col-sm-4">

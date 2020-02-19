@@ -22,3 +22,12 @@ remove shipping company (upload delivery receit) ok
 delivery proof = shipment proof (orders/show) ok
 
 
+add prompt in order/show = add customer delivery address
+
+add name and contact number = delivery address
+
+booking fee = fixed 250, approximate local shipping fee is COD
+
+approve payment, => add button to request for payment confirmation to be emailed kay 2A
+
+

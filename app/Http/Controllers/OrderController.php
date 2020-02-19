@@ -237,8 +237,9 @@ class OrderController extends Controller
                 $mail_to = $request->input('email');
                 $mailDetails['type'] = 'supplier';
             }
+            $mailer->to($request->user()->email)->send(new DynamicEmail($order, $mailTitle , 'mails.order.Instruction'));
             if($order->withQuote == false){
-                $mailer->to($request->user()->email)->send(new DynamicEmail($order, $mailTitle , 'mails.order.Instruction'));
+                
                 OrderKey::create(['token' => $token , 'order_id' => $order->id, 'type' => request()->user()->getOppositeRole()]);
                 $mailer->to(env('ADMIN1'))->send(new DynamicEmail(['order' => $order, 'inputs' => $request->all()], $mailTitle , 'mails.order.OrderDetails'));
                 if($user_id == null){

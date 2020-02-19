@@ -39,7 +39,7 @@
 		<div class="row">
 			<div class="col-sm-10"><b>Items:</b></div>
 			<div class="col-sm-2">
-			<button type="button" class="btn btn-primary pull-right btn-sm" onclick="addItem()"><i class="fa fa-plus"></i> Add Box</button>
+			<button type="button" class="btn btn-primary pull-right btn-sm" onclick="addItem()"><i class="fa fa-plus"></i> Add Item/SKU</button>
 			</div>
 		</div>
 		<div class="table-responsive">

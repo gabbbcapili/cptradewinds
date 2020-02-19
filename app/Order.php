@@ -101,7 +101,7 @@ class Order extends Model
                return 'Arrived(PH) - Waiting for admin payment confirmation';
           }elseif ($this->status == 13){
                 if($this->pickup_type == 'pickup'){
-                   return 'Arrived(PH) - Waiting for customer pick-up details';
+                   return 'Arrived(PH) - Waiting for customer pick-up';
                 }elseif($this->pickup_type == 'deliver'){
                     return 'Arrived(PH) - Waiting for admin delivery details';
                 }
@@ -109,7 +109,7 @@ class Order extends Model
                return 'Delivered / Picked up';
           }elseif ($this->status == 15){
               if($this->withQuote == true){
-               return 'Qoute Completed';
+               return 'Quotation Completed';
               }else{
                 return 'Completed';
               }

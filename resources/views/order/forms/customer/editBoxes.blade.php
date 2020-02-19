@@ -19,13 +19,13 @@
               <table class="table table-bordered table-condensed text-center" id="box-table">
                 <thead>
                 <tr class="input-table-tr">
-                  <th class="input-table-count">#</th>
-                  <th class="input-table-qty">Qty</th>
+                  <th class="input-table-count">Box</th>
+                  <th class="input-table-qty">Qty of Boxes</th>
                   <th class="input-table-select">Unit of Measurement</th>
-                  <th class="input-table-number">Length</th>
-                  <th class="input-table-number">Width</th>
-                  <th class="input-table-number">Height</th>
-                  <th class="input-table-number">Weight(kg)</th>
+                  <th class="input-table-number">Length per Box</th>
+                  <th class="input-table-number">Width per Box</th>
+                  <th class="input-table-number">Height per Box</th>
+                  <th class="input-table-number">Weight(kg) per Box</th>
                 </tr>
                 </thead>
                 <tbody>

@@ -34,7 +34,7 @@
                     @endif
                     <!-- <th class="text-center">Logs</th> -->
                     @if(request()->segment(1) == 'quotation')
-                    <th class="text-center">Price</th>
+                    <th class="text-center">Importation Cost</th>
                     @endif
                     <th class="text-center">Status</th>
                     <th class="text-center">Action</th>

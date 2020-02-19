@@ -13,7 +13,6 @@ Based on the specs you provided, your <b>discounted</b> total importation cost i
 when you leave a review on our FB Page
 <br>
  </font>
-<b>or P {{ number_format($order->price, 2) }} without the review</b>
 </p>
 <p>This includes everything from freight to customs clearance, and this is the exact amount you'd have to pay if the actual measurements (taken upon your shipment's arrival) match the figures you provided for the quotation. <br>
 

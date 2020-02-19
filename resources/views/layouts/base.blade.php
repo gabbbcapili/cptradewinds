@@ -233,6 +233,21 @@ $(document).on("click", '.modal_button', function(){
     });
 </script>
 
+<script type="text/javascript">
+$( "a" ).each(function( index ) {
+  var href = $(this).attr('href');
+  var value = href.replace( "/index.php/", "/" );
+  $(this).attr('href', value);
+});
+
+$( "img" ).each(function( index ) {
+  var src = $(this).attr('src');
+  var value = src.replace( "/index.php/", "/" );
+  $(this).attr('src', value);
+});
+
+</script>
+
 
 
 @yield('javascript2')
