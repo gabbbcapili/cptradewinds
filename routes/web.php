@@ -41,6 +41,9 @@ Route::get('orders/addQuotation/no-login/{token}', 'OrderController@addQuotation
 
 
 
+Route::get('ajax/getNotifications', 'AjaxController@getNotifications');
+
+
 Route::get('orders/cancel/{order}', 'OrderController@cancel');
 Route::get('orders/cancelForm/{order}', 'OrderController@cancelForm')->middleware('admin');
 Route::put('orders/cancelSubmit/{order}', 'OrderController@cancelSubmit')->middleware('admin');

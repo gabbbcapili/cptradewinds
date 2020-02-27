@@ -1,0 +1,15 @@
+admin1:
+u: david@tradewinds.ph
+p: admin123
+
+admin 2a
+u: hbkgt@live.com
+p: admin123
+
+admin 2b
+u: cherry@tradewinds.ph
+p: admin123
+
+admin 3 (customs clearance):
+u: admin3@gmail.com
+p: admin123

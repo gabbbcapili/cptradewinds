@@ -194,6 +194,23 @@
     });
 </script>
 
+<script type="text/javascript">
+$(document).ready(function(){
+    $.ajax({
+    type: "GET",
+    dataType: "JSON",
+    url: "{{ action('AjaxController@getNotifications') }}",
+    success: function (data) {
+        $('#badge_shipments').text(data.shipments);
+        $('#badge_quotations').text(data.quotations);
+        $('#badge_payments').text(data.payments);
+    }
+  });
+
+    
+}); 
+</script>
+
 
   @yield('javascript')
 <script>

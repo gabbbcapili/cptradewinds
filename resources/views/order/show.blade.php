@@ -78,9 +78,9 @@
 					@endif
 					@if($order->status == 13 && auth()->user()->isAdmin())
 							@if($order->pickup_type == 'pickup')
-                            <a href="#" class="btn btn-primary confirmation" data-title="Are you sure to complete this transaction?" data-text="If yes, you will not be able undo this action!" data-href="{{ action('OrderController@completeTransaction', $order->id) }}"><i class="fa fa-check-square-o"></i>Picked up?</a>
+                           <br><br><a href="#" class="btn btn-primary modal_button" data-href="{{ action('OrderController@deliverForm', $order->id) }}"><i class="fa fa-check-square-o"></i> Picked up?</a>
                             @elseif($order->pickup_type == 'deliver')
-                            <a href="#" class="btn btn-primary modal_button" data-href="{{ action('OrderController@deliverForm', $order->id) }}"><i class="fa fa-check-square-o"></i> Delivered?</a>
+                         <br><br><a href="#" class="btn btn-primary modal_button" data-href="{{ action('OrderController@deliverForm', $order->id) }}"><i class="fa fa-check-square-o"></i> Delivered?</a>
                             @endif
 
                     @endif
@@ -116,7 +116,10 @@
 					<b>
 					{{ $order->get_status_display() }}
 					@if(($order->status == 15) && auth()->user()->isCustomer() && $order->withQuote == true)
-                            <a href="#" class="btn modal_button" data-href="{{ action('OrderController@paySupplier', $order->id) }}"><i class="fa fa-edit"></i> Pay Supplier</a>
+                           <br><br><a href="#" class="btn modal_button" data-href="{{ action('OrderController@paySupplier', $order->id) }}"><i class="fa fa-edit"></i> Pay Supplier</a>
+                    @endif
+                    @if($order->status == 9 && auth()->user()->isCustomer())
+                              <br><br><a href="#" class="btn btn-primary modal_button" data-href="{{ action('OrderController@editDeliveryAddress', $order->id) }}"><i class="fa fa-check"></i> Update Delivery Address</a>
                     @endif
 <!-- 					@if($order->withQuote == true && (auth()->user()->isCustomer() || auth()->user()->isSupplier() ))
 						<a href="{{ route('shipmentcreate') }}" style="margin-left:10px" class="btn btn-success">Start a Shipment</a>
@@ -138,7 +141,7 @@ $payment = $order->payments->where('status', 7)->first();
 	<div class="box-body">
 		<div class="row">
 			<div class="container-fluid text-center">
-				<h2>Payments: <i class="fa fa-check fa-lg green"></i></h2>
+				<h2>Payment to Supplier with TT Fee:: <i class="fa fa-check fa-lg green"></i></h2>
 				<h3>Total Amount: {{ number_format($payment->total_amount(), 2) }} <a href="#" class="modal_button btn" data-href="{{ action('PaymentController@show', [$payment->id] ) }}"><i class="fa fa-eye"></i> View details here</a></h3>
 			</div>
 		</div>	
@@ -366,7 +369,7 @@ $payment = $order->payments->where('status', 7)->first();
           @if($order->delivery_receipt != null)
        <div class="box box-solid">
 		<div class="container-fluid">
-    			<h3>Shipment Proof:</h3>
+    			<h3>Proof of pickup/last mile delivery:</h3>
     		</div>
 		<div class="box-body">
 		    <div class="col-sm-4">

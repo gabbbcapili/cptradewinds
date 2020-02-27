@@ -67,7 +67,7 @@ $payment = $order->payments->where('status', 7)->first();
 	<div class="box-body">
 		<div class="row">
 			<div class="container-fluid text-center">
-				<h2>Payments: <i class="fa fa-check fa-lg green"></i></h2>
+				<h2>Payment to Supplier with TT Fee: <i class="fa fa-check fa-lg green"></i></h2>
 				<h3>Total Amount: {{ number_format($payment->total_amount(), 2) }} <a href="#" class="modal_button btn" data-href="{{ action('PaymentController@show', [$payment->id] ) }}"><i class="fa fa-eye"></i> View details here</a></h3>
 			</div>
 		</div>	

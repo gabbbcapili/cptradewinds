@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use GuzzleHttp\Client;
 
 class Payment extends Model
 {
@@ -75,5 +76,15 @@ class Payment extends Model
      public static function getCutOffString(){
         return 'Sorry our payment services is only available at 9:00am to 2:00pm. Please come back tommorow.';
      }
+
+     public function shippedSMS(){
+        $client = new Client();
+        $msg = 'Please check payment details ' . action('PaymentController@index') . ' Transaction #: ' . $this->id;
+         $client = $client->post('https://api.semaphore.co/api/v4/messages',
+             [ 'form_params' => 
+                [ 'apikey' => env('SEMAPHORE_KEY'), 'number' => env('ADMIN2a_CONTACT_NUMBER'), 'message' => $msg, 'sendername' => env('SEMAPHORE_FROM_NAME')]
+            ]);
+         return $client;
+      }
 }
 

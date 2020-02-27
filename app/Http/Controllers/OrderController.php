@@ -427,14 +427,17 @@ class OrderController extends Controller
         }
         $validator = Validator::make($request->all(),[
             'delivery_address' => 'required',
+            'pickup_person' => 'required',
+            'delivery_contact_number' => ['required' , 'regex:/^(09|\+639)\d{9}$/'],
         ],
             [
                 'delivery_address.required' => 'This field is required.',
+
         ]);
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()]);
             }
-        $data = $request->only(['delivery_address']);
+        $data = $request->only(['delivery_address', 'pickup_person', 'delivery_contact_number']);
         $data['status'] = 10;
         $order->update($data);
         $request->session()->flash('status', 'Successfully updated delivery address! Waiting for admin due amount.');

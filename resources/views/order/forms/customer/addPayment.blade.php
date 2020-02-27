@@ -16,7 +16,7 @@
 					<label><input type="radio" name="pickup_type" value="pickup" checked>Arrange pickup/shipment myself (P{{ number_format($order->price, 2) }})</label>
 					</div>
 					<div class="radio">
-					  <label><input type="radio" name="pickup_type" value="deliver">Avail booking of local transport (P{{ number_format($order->delivery_price + $order->price, 2) }})</label>
+					  <label><input type="radio" name="pickup_type" value="deliver">Avail booking of local transport (P{{ number_format( $order->price + env('BOOKING_FEE'), 2) }}) + (P{{ number_format($order->delivery_price, 2) }} Payable via COD)</label>
 					</div>
 					<div class="pickup_details">
 						<hr>

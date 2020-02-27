@@ -9,6 +9,22 @@
 	    </h4>
 	</div>
 		<div class="modal-body" >
+		<div class="row invoice-info">
+		    <div class="col-sm-12 invoice-col">
+		      	<div class="col-sm-8">
+		      		<div class="form-group">
+		      		<label for="boxes_received">Full Name:</label>
+		    	  	<input type="text" name="pickup_person" class="form-control">
+		      	</div>    		
+		      </div>
+		      	<div class="col-sm-4">
+		      		<div class="form-group">
+		      		<label for="boxes_received">Mobile Number:</label>
+		    	  	<input type="text" name="delivery_contact_number" class="form-control">
+		      	</div>    		
+		      </div>
+		    </div>
+		  </div>
 		 <div class="row invoice-info">
 		    <div class="col-sm-12 invoice-col">
 		      <div class="form-group">
@@ -57,7 +73,7 @@
 			        	$('.error').remove();
 			        	$.each(data.error, function(index, val){
 			        		console.log(index);
-			        	$('[id="'+ index +'"]').after('<label class="text-danger error">' + val + '</label>');
+			        	$('[name="'+ index +'"]').after('<label class="text-danger error">' + val + '</label>');
 			        	});
 			        }
 			        setTimeout(() => {

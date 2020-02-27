@@ -1,33 +1,21 @@
-completed = quote completed ok
+add prompt in order/show = add customer delivery address ok
 
-instruction quote completed (pay supplier) ok
+add name and contact number = delivery address ok
 
-2 Choices php deposit or php and usd deposit (change email) ok
-
-email after deposit (payment services) admin 2a ok
-
-thumbnail payment (order/show) ok
-
-palletized = pallet ok
-carton boxes = box ok
-
-right way of putting shipping mark picture ok
-
-arrived at ph customs = update status to 9
-
-+ 99 php sa delivery (add to importation cost) sa email ok
-
-remove shipping company (upload delivery receit) ok
-
-delivery proof = shipment proof (orders/show) ok
+booking fee = fixed 250, approximate local shipping fee is COD ok
 
 
-add prompt in order/show = add customer delivery address
+add sms notification on paymentservices creation to admin 2a = +639178338008 ok
 
-add name and contact number = delivery address
 
-booking fee = fixed 250, approximate local shipping fee is COD
+admin 2a = hbkgt@live.com  ok
 
-approve payment, => add button to request for payment confirmation to be emailed kay 2A
+admin 1 = make corpo email David@tradewinds.ph David Hidalgo ok
+admin 2b= make corpo email Cherry@tradewinds.ph Cherry Benoza ok
 
+add badge for shipment quotation paymentservices if ilan ang pending ok
+
+
+if pick up - pick up form (picture) ok
+	-counterpart ng deliver form ok
 

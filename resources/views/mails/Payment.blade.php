@@ -8,7 +8,7 @@
 Hello, <br><br>
 
 Importation Cost: {{ $order->price }}<br>
-Delivery Price to {{ $order->delivery_address }}: {{ $order->delivery_price }}<br>
+Delivery Price to {{ $order->delivery_address }}: {{ $order->delivery_price }} (COD) + Booking fee: {{ env('BOOKING_FEE') }}<br>
 
 Sir David: Please revise email tempalate below:<br>
 

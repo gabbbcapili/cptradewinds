@@ -18,7 +18,7 @@
 		    </div> -->
 		    <div class="col-sm-8 invoice-col">
 		      <div class="form-group">
-		      	<label for="warehouse"> Delivery Receipt:</label>
+		      	<label for="warehouse"> {{ $order->pickup_type == 'pickup' ? 'Pickup' : 'Delivery' }} Receipt:</label>
 		      	<input type="file" class="form-control" name="delivery_receipt">
 		      </div>
 		    </div>

@@ -143,7 +143,7 @@
                             @endif
                             @if($order->status == 13 && auth()->user()->isAdmin())
                               @if($order->pickup_type == 'pickup')
-                              <a href="#" class="btn btn-primary confirmation" data-title="Are you sure to complete this transaction?" data-text="If yes, you will not be able undo this action!" data-href="{{ action('OrderController@completeTransaction', $order->id) }}"><i class="fa fa-check-square-o"></i>Picked up?</a>
+                              <a href="#" class="btn modal_button" data-href="{{ action('OrderController@deliverForm', $order->id) }}"><i class="fa fa-check-square-o"></i> Picked up?</a>
                               @elseif($order->pickup_type == 'deliver')
                               <a href="#" class="btn modal_button" data-href="{{ action('OrderController@deliverForm', $order->id) }}"><i class="fa fa-check-square-o"></i> Delivered?</a>
                               @endif

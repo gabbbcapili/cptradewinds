@@ -10,7 +10,7 @@
         @if(request()->user()->isAdmin() || request()->user()->isCustomer() || request()->user()->isSupplier())
         <li class="nav-item dropdown {{ $request->segment(1) == 'orders' ? 'active' : '' }}">
           <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-            <i class="fa fa-truck"></i> <span>Shipments</span>  
+            <i class="fa fa-truck"></i> <span>Shipments</span>  <span class="badge badge-primary" id="badge_shipments"></span>
             <span class="pull-right-container">
                     <i class="fa fa-angle-down pull-right"></i>
                   </span></a>
@@ -24,7 +24,7 @@
 
         <li class="nav-item dropdown {{ $request->segment(1) == 'quotation' ? 'active' : '' }}">
           <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-            <i class="fa fa-file-text"></i>  <span>Quotations</span>  
+            <i class="fa fa-file-text"></i>  <span>Quotations</span>  <span class="badge badge-primary" id="badge_quotations"></span>
             <span class="pull-right-container">
                     <i class="fa fa-angle-down pull-right"></i>
                   </span></a>
@@ -40,7 +40,7 @@
          @if(auth()->user()->isCustomer() ||  auth()->user()->isAdmin())
         <li class="nav-item dropdown {{ $request->segment(1) == 'payments' ? 'active' : '' }}">
           <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-            <i class="fa fa-money"></i>  <span>Payment Services</span>  
+            <i class="fa fa-money"></i>  <span>Payment Services</span><span class="badge badge-primary" id="badge_payments"></span>  
             <span class="pull-right-container">
                     <i class="fa fa-angle-down pull-right"></i>
                   </span></a>

@@ -8,7 +8,21 @@
 	    <h4 class="modal-title" id="modalTitle"> Order - Update Details(<b>(Reference No:</b> #{{ $order->shipment_id }})
 	    </h4>
 	</div>
-		<div class="modal-body" >
+		<div class="modal-body">
+			<div class="row invoice-info">
+				<div class="col-sm-8 invoice-col">
+					<div class="form-group">
+						<label for="boxes_received">Full Name:</label>
+		    	  		<input type="text" name="pickup_person" class="form-control" disabled value="{{ $order->pickup_person }}">
+					</div>
+				</div>
+				<div class="col-sm-4 invoice-col">
+					<div class="form-group">
+						<label for="boxes_received">Mobile Number:</label>
+		    	  		<input type="text" name="delivery_contact_number" class="form-control" disabled value="{{ $order->delivery_contact_number }}">
+					</div>
+				</div>
+			</div>
 			<div class="row invoice-info">
 				<div class="col-sm-12 invoice-col">
 					<div class="form-group">
