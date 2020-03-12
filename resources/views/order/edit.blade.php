@@ -33,9 +33,9 @@
 	    @endif
 	    @if(request()->user()->isCustomer())
 	    	@if($order->status == 11)
-	         	<!-- Upload Shipping -->
+	         	<!-- Upload Payment -->
 				@include('order/forms/customer/addPayment')
-				<!-- Upload Shipping -->
+				<!-- Upload Payment -->
 	         @endif
 	    @endif
     </section>

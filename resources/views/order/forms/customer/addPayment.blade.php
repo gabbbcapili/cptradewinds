@@ -11,6 +11,7 @@
 			<br>
 
 				<div class="row text-center center-div nextStep">
+					<p>Tradewinds.ph Account Number: (BDO) HBK Global Trading 0020-7007-2653</p>
 					<p>The approximate local transport fee is P{{ number_format($order->delivery_price, 2) }} to {{ $order->delivery_address }}. This amount is only an estimate and is payable to the shipping company. This booking service is provided by us free of charge. What would you like to do?</p>
 					<div class="radio">
 					<label><input type="radio" name="pickup_type" value="pickup" checked>Arrange pickup/shipment myself (P{{ number_format($order->price, 2) }})</label>
